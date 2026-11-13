@@ -5,7 +5,7 @@ import {calibrateColor} from '../shared/color-calibration.mjs';
 import fs from 'node:fs';import path from 'node:path';import assert from 'node:assert/strict';import {setTimeout as delay} from 'node:timers/promises';
 // Explicitly authorized physical LED tests. All data is isolated; restore captured cache/modes in finally.
 const root=path.resolve(import.meta.dirname,'..'),dir=path.join(root,'artifacts','hardware-'+Date.now()),nativeDir=path.join(dir,'native');fs.mkdirSync(nativeDir,{recursive:true});
-const userDir=path.resolve(process.env.LUMEN_USER_DATA||path.join(root,'runtime','user-data')),settings=path.join(userDir,'native-hardware','OpenRGB.json');
+const userDir=path.resolve(process.env.RAYLOOM_USER_DATA||path.join(root,'runtime','user-data')),settings=path.join(userDir,'native-hardware','OpenRGB.json');
 if(fs.existsSync(settings))fs.copyFileSync(settings,path.join(nativeDir,'OpenRGB.json'));
 const core=new CoreClient(root,nativeDir,{virtual:false}),studio=new StudioService(root,dir,()=>core);
 const report={physicalHardwareTested:true,runtime:dir,checks:[],rates:[],effects:[],restored:false,limitation:'Driver completion and native cache are measured; actual emitted LED color and firmware refresh require visual measurement.'};

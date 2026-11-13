@@ -11,7 +11,7 @@ const root=path.resolve(import.meta.dirname,'..');
 const data=fs.mkdtempSync(path.join(os.tmpdir(),'lumen-plain-close-'));
 const artifacts=path.join(root,'artifacts');fs.mkdirSync(artifacts,{recursive:true});
 const screenshot=path.join(data,'closed.png');
-const env={...process.env,LUMEN_MODE:'virtual',LUMEN_USER_DATA:data,LUMEN_SCREENSHOT:screenshot};
+const env={...process.env,RAYLOOM_MODE:'virtual',RAYLOOM_USER_DATA:data,RAYLOOM_SCREENSHOT:screenshot};
 delete env.ELECTRON_RUN_AS_NODE;
 const executable=path.join(root,'node_modules','electron','dist',process.platform==='win32'?'electron.exe':'electron');
 const child=spawn(executable,[root],{cwd:root,env,windowsHide:true,stdio:'ignore'});

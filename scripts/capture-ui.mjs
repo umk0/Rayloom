@@ -7,7 +7,7 @@ import {setTimeout as delay} from 'node:timers/promises';
 import {connectRuntime} from '../desktop/runtime-client.mjs';
 const require=createRequire(import.meta.url),root=path.resolve(import.meta.dirname,'..');
 function playwright(){
- if(process.env.LUMEN_PLAYWRIGHT_MODULE)return require(process.env.LUMEN_PLAYWRIGHT_MODULE);
+ if(process.env.RAYLOOM_PLAYWRIGHT_MODULE)return require(process.env.RAYLOOM_PLAYWRIGHT_MODULE);
  try{return require('playwright');}catch{}
  for(const base of [process.env.LOCALAPPDATA&&path.join(process.env.LOCALAPPDATA,'npm-cache'),path.join(os.homedir(),'AppData/Local/npm-cache')].filter(Boolean)){
   const dir=path.join(base,'_npx');if(!fs.existsSync(dir))continue;
@@ -28,13 +28,13 @@ async function capture(name){
  report.screens.push({name,file,pixels:screenshot.size,...metrics});console.log('CAPTURE',name);
 }
 try{
- const env={...process.env,LUMEN_MODE:'virtual',LUMEN_USER_DATA:runtime};delete env.ELECTRON_RUN_AS_NODE;delete env.LUMEN_SCREENSHOT;
+ const env={...process.env,RAYLOOM_MODE:'virtual',RAYLOOM_USER_DATA:runtime};delete env.ELECTRON_RUN_AS_NODE;delete env.RAYLOOM_SCREENSHOT;
  app=await _electron.launch({executablePath:path.join(root,'node_modules/electron/dist/electron.exe'),args:[root],cwd:root,env,timeout:60000});
  page=await app.firstWindow();page.setDefaultTimeout(15000);page.on('pageerror',e=>report.errors.push(e.message));
  await page.waitForFunction(async()=>{const s=await window.rayloom.snapshot();return s.mode==='virtual'&&s.status?.pluginsReady&&s.status.detectionPercent>=100;},{},{timeout:60000});
  await page.locator('.spatial-component').first().waitFor();
 
- if(process.env.LUMEN_CAPTURE_ONLY==='details'){
+ if(process.env.RAYLOOM_CAPTURE_ONLY==='details'){
   await app.evaluate(({BrowserWindow})=>BrowserWindow.getAllWindows()[0].setSize(1480,1000));
   for(const [tab,title,key] of [['Моя подсветка','Качество воспроизведения','fine-settings'],['Сцены и игры','Проверить реакцию без игры','game-tester'],['Создать эффект','Как устроен HTML-эффект','canvas-help'],['Настройки','Благодарности и лицензии','about']]){
    await page.locator('.studio-nav').getByRole('button',{name:tab,exact:true}).click();
@@ -70,17 +70,17 @@ try{
  }else{
 
  const mainPages=[['Моя подсветка','home'],['Устройства','devices'],['Группы','groups'],['Сцены и игры','scenes'],['Создать эффект','code'],['Расширения','extensions'],['Настройки','settings']];
- for(const width of (process.env.LUMEN_CAPTURE_ONLY==='advanced'?[]:process.env.LUMEN_CAPTURE_GROUP==='1'?[1480]:[1480,1060])){
+ for(const width of (process.env.RAYLOOM_CAPTURE_ONLY==='advanced'?[]:process.env.RAYLOOM_CAPTURE_GROUP==='1'?[1480]:[1480,1060])){
   await app.evaluate(({BrowserWindow},width)=>BrowserWindow.getAllWindows()[0].setSize(width,width===1480?1000:700),width);
   for(const [index,[title,key]] of mainPages.entries()){
-   if(process.env.LUMEN_CAPTURE_GROUP==='1'&&key!=='groups')continue;
+   if(process.env.RAYLOOM_CAPTURE_GROUP==='1'&&key!=='groups')continue;
    await page.locator('.studio-nav').getByRole('button',{name:new RegExp('^'+title)}).click();
    await page.locator('.studio-scroll').evaluate(el=>{el.scrollTop=0;});
    await capture(String(index+1).padStart(2,'0')+'-'+key+'-'+width);
   }
  }
 
- if(process.env.LUMEN_CAPTURE_DPI==='1'){
+ if(process.env.RAYLOOM_CAPTURE_DPI==='1'){
   await app.evaluate(({BrowserWindow})=>BrowserWindow.getAllWindows()[0].setSize(1480,1000));
   for(const zoom of [1.25,1.5,2]){
    await app.evaluate(({BrowserWindow},zoom)=>BrowserWindow.getAllWindows()[0].webContents.setZoomFactor(zoom),zoom);
@@ -98,7 +98,7 @@ try{
   await app.evaluate(({BrowserWindow})=>BrowserWindow.getAllWindows()[0].webContents.setZoomFactor(1));
  }
 
- if(process.env.LUMEN_CAPTURE_GROUP!=='1'){
+ if(process.env.RAYLOOM_CAPTURE_GROUP!=='1'){
  await app.evaluate(({BrowserWindow})=>BrowserWindow.getAllWindows()[0].setSize(1480,1000));
  await page.locator('.studio-nav').getByRole('button',{name:'Моя подсветка',exact:true}).click();
  await page.locator('.component-list button').first().click();
@@ -110,7 +110,7 @@ try{
  await page.locator('.sidebar').waitFor();
  const buttons=await page.locator('.sidebar button').allTextContents();report.advancedButtons=buttons;
  const advancedPages=[['Эффекты','effects'],['Устройства','devices'],['Расположение','map'],['Датчики','sensors'],['E1.31','e131'],['Интеграции','integrations'],['Расписание','scheduler'],['Сцены и пресеты','scenes'],['Настройки','settings']];
- for(const width of (process.env.LUMEN_CAPTURE_ONLY==='advanced'?[1060]:[1480,1060])){
+ for(const width of (process.env.RAYLOOM_CAPTURE_ONLY==='advanced'?[1060]:[1480,1060])){
   await app.evaluate(({BrowserWindow},width)=>BrowserWindow.getAllWindows()[0].setSize(width,width===1480?1000:700),width);
   for(const [index,[title,key]] of advancedPages.entries()){
    const target=page.locator('.sidebar').getByRole('button',{name:new RegExp('^'+title)});

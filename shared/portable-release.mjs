@@ -117,6 +117,7 @@ function requiredInputs(root){
   ['scripts/start-elevated-agent.ps1','app/scripts/start-elevated-agent.ps1'],
   ['scripts/register-background-task.ps1','app/scripts/register-background-task.ps1'],
   ['scripts/prepare-uninstall.ps1','app/scripts/prepare-uninstall.ps1'],
+  ['scripts/migrate-startup-task.ps1','app/scripts/migrate-startup-task.ps1'],
   ['scripts/stop-background-runtime.mjs','app/scripts/stop-background-runtime.mjs'],
   ['package.json','app/package.json'],['LICENSE','app/LICENSE']
  ];

@@ -9,7 +9,7 @@ import {setTimeout as delay} from 'node:timers/promises';
 import {connectRuntime} from '../desktop/runtime-client.mjs';
 const require=createRequire(import.meta.url),root=path.resolve(import.meta.dirname,'..');
 function playwright(){
- if(process.env.LUMEN_PLAYWRIGHT_MODULE)return require(process.env.LUMEN_PLAYWRIGHT_MODULE);
+ if(process.env.RAYLOOM_PLAYWRIGHT_MODULE)return require(process.env.RAYLOOM_PLAYWRIGHT_MODULE);
  try{return require('playwright');}catch{}
  const cache=path.join(process.env.LOCALAPPDATA,'npm-cache/_npx');
  for(const entry of fs.readdirSync(cache)){const candidate=path.join(cache,entry,'node_modules/playwright');if(fs.existsSync(path.join(candidate,'package.json')))return require(candidate);}
@@ -25,7 +25,7 @@ const shot=async name=>{await delay(400);const data=await app.evaluate(async({Br
 const toggle=async()=>{const field=page.getByRole('switch',{name:'Запускать подсветку вместе с Windows',exact:true});await field.focus();await field.press('Space');};
 const size=async(width)=>{await app.evaluate(({BrowserWindow},width)=>BrowserWindow.getAllWindows()[0].setSize(width,1000),width);await delay(250);};
 try{
- const env={...process.env,LUMEN_MODE:'virtual',LUMEN_USER_DATA:runtime};delete env.ELECTRON_RUN_AS_NODE;
+ const env={...process.env,RAYLOOM_MODE:'virtual',RAYLOOM_USER_DATA:runtime};delete env.ELECTRON_RUN_AS_NODE;
  app=await _electron.launch({executablePath:path.join(root,'node_modules/electron/dist/electron.exe'),args:[root],cwd:root,env,timeout:60000});
  page=await app.firstWindow();page.setDefaultTimeout(15000);page.on('pageerror',e=>report.errors.push(e.message));
  await page.waitForFunction(async()=>{const s=await window.rayloom.snapshot();return s.mode==='virtual'&&!s.starting&&s.status?.pluginsReady;},{},{timeout:60000});

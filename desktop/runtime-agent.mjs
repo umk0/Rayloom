@@ -101,7 +101,7 @@ const coreCalls=new Set([...coreReads,'plugin.rpc','plugin.profile.get','plugin.
 async function handle(socket,method,args={}){
  if(method==='hello')return {pid:process.pid,mode,ready:ready&&!restoring,transport:descriptor.transport};
  if(method==='snapshot')return error?{mode,error,devices:[],plugins:[]}:!ready||restoring?{starting:true,mode,devices:[],plugins:[]}:{mode,status:await core.call('status'),devices:await core.call('devices.list'),plugins:await core.call('plugins.list')};
- if(method==='runtime.state')return {pid:process.pid,corePid:core.child?.pid,ready:ready&&!restoring,error,mode,settings,memory:process.memoryUsage(),htmlRenderer:!!canvasOwner,canvasPid:canvasOwner?.child?.pid,engine:'Node + OpenRGB',restoresLastProfile:true};
+ if(method==='runtime.state')return {pid:process.pid,corePid:core.child?.pid,ready:ready&&!restoring,error,mode,settings,memory:process.memoryUsage(),htmlRenderer:!!canvasOwner,canvasPid:canvasOwner?.child?.pid,engine:'Rayloom Engine',restoresLastProfile:true};
  if(method==='runtime.settings'){if(typeof args.settings?.autoStart==='boolean')await startupSetting(args.settings.autoStart);return handle(socket,'runtime.state');}
  if(method==='runtime.settings.reload'){settings={...settings,...read('app-settings',{})};return handle(socket,'runtime.state');}
  if(method==='runtime.diagnostics')return runtimeDiagnostics({dataDir,studioDir:studio.dir,root,mode,settings});

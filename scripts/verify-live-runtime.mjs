@@ -8,7 +8,7 @@ import {discoverLayout,identity} from '../shared/spatial.mjs';
 import {BUILTIN_EFFECTS} from '../shared/builtin-effects.mjs';
 
 if(!process.argv.includes('--allow-physical'))throw Error('Physical test requires --allow-physical');
-const root=path.resolve(import.meta.dirname,'..'),data=path.resolve(process.env.LUMEN_USER_DATA||path.join(root,'runtime','user-data'));
+const root=path.resolve(import.meta.dirname,'..'),data=path.resolve(process.env.RAYLOOM_USER_DATA||path.join(root,'runtime','user-data'));
 const report={started:new Date().toISOString(),physicalHardwareTested:true,checks:[],effects:[],restored:false,limitations:'Native driver/cache evidence only; optical color correctness needs the person observing the device.'};
 const client=await connectRuntime(root,data,'hardware',{launch:false});
 const core=(method,params={})=>client.call('core',{method,params});

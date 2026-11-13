@@ -11,7 +11,7 @@ import {deviceKey} from '../shared/spatial.mjs';
 
 const require=createRequire(import.meta.url),root=path.resolve(import.meta.dirname,'..');
 function playwrightPath(){
- if(process.env.LUMEN_PLAYWRIGHT_MODULE)return process.env.LUMEN_PLAYWRIGHT_MODULE;
+ if(process.env.RAYLOOM_PLAYWRIGHT_MODULE)return process.env.RAYLOOM_PLAYWRIGHT_MODULE;
  try{return require.resolve('playwright');}catch{}
  for(const cache of [...new Set([process.env.npm_config_cache,process.env.LOCALAPPDATA&&path.join(process.env.LOCALAPPDATA,'npm-cache'),path.join(os.homedir(),'AppData','Local','npm-cache'),path.join(os.homedir(),'.npm')].filter(Boolean))]){
   const folder=path.join(cache,'_npx');if(!fs.existsSync(folder))continue;
@@ -19,7 +19,7 @@ function playwrightPath(){
    const candidate=path.join(folder,entry.name,'node_modules','playwright');if(fs.existsSync(path.join(candidate,'package.json')))return candidate;
   }
  }
- throw Error('Set LUMEN_PLAYWRIGHT_MODULE to an existing Playwright installation.');
+ throw Error('Set RAYLOOM_PLAYWRIGHT_MODULE to an existing Playwright installation.');
 }
 const {_electron}=require(playwrightPath()),runtime=fs.mkdtempSync(path.join(os.tmpdir(),'rayloom-fullscreen-'));
 const artifacts=path.join(root,'output','playwright','fullscreen-'+new Date().toISOString().replace(/[:.]/g,'-'));
@@ -43,7 +43,7 @@ const isAlive=pid=>{try{process.kill(pid,0);return true;}catch(error){if(error.c
 
 try{
  await check('isolated virtual runtime and initial user workflow',async()=>{
-  const env={...process.env,LUMEN_MODE:'virtual',LUMEN_USER_DATA:runtime,LUMEN_UI:'legacy'};delete env.ELECTRON_RUN_AS_NODE;delete env.LUMEN_SCREENSHOT;
+  const env={...process.env,RAYLOOM_MODE:'virtual',RAYLOOM_USER_DATA:runtime,RAYLOOM_UI:'legacy'};delete env.ELECTRON_RUN_AS_NODE;delete env.RAYLOOM_SCREENSHOT;
   app=await _electron.launch({executablePath:path.join(root,'node_modules','electron','dist','electron.exe'),args:[root],cwd:root,env,timeout:60000});
   page=await app.firstWindow({timeout:30000});page.setDefaultTimeout(15000);page.on('pageerror',error=>report.rendererErrors.push(error.message));
   await page.waitForLoadState('domcontentloaded');

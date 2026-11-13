@@ -9,7 +9,7 @@ import {setTimeout as delay} from 'node:timers/promises';
 import {connectRuntime} from '../desktop/runtime-client.mjs';
 const require=createRequire(import.meta.url),root=path.resolve(import.meta.dirname,'..');
 function playwright(){
- if(process.env.LUMEN_PLAYWRIGHT_MODULE)return require(process.env.LUMEN_PLAYWRIGHT_MODULE);
+ if(process.env.RAYLOOM_PLAYWRIGHT_MODULE)return require(process.env.RAYLOOM_PLAYWRIGHT_MODULE);
  try{return require('playwright');}catch{}
  const cache=path.join(process.env.LOCALAPPDATA,'npm-cache/_npx');
  for(const entry of fs.readdirSync(cache)){const candidate=path.join(cache,entry,'node_modules/playwright');if(fs.existsSync(path.join(candidate,'package.json')))return require(candidate);}
@@ -28,7 +28,7 @@ const expectEffect=async(name,speed)=>{await page.getByRole('heading',{name:'Н�
 const reloadEmpty=async()=>{await patch({current:null,mode:'virtual',loadRequested:false});await page.reload();await page.getByRole('heading',{name:'Настройки · Спектр',exact:true}).waitFor();await wait(()=>page.locator('.spatial-component').count());await delay(650);};
 const prism={effect:'prism',group:'all',speed:5,brightness:100,scale:350,fps:60,color:0x7bf1b4,gameReactive:false,projection:'xy'};
 try{
- const env={...process.env,LUMEN_MODE:'virtual',LUMEN_USER_DATA:runtime};delete env.ELECTRON_RUN_AS_NODE;
+ const env={...process.env,RAYLOOM_MODE:'virtual',RAYLOOM_USER_DATA:runtime};delete env.ELECTRON_RUN_AS_NODE;
  app=await _electron.launch({executablePath:path.join(root,'node_modules/electron/dist/electron.exe'),args:[root],cwd:root,env,timeout:60000});
  page=await app.firstWindow();page.setDefaultTimeout(15000);page.on('pageerror',e=>report.errors.push(e.message));
  await page.waitForFunction(async()=>{const s=await window.rayloom.snapshot();return s.mode==='virtual'&&s.status?.virtual&&!s.starting&&s.status.pluginsReady;},{},{timeout:60000});

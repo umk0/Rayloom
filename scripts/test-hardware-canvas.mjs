@@ -2,9 +2,9 @@
 import fs from 'node:fs';import path from 'node:path';import os from 'node:os';import assert from 'node:assert/strict';import {createRequire} from 'node:module';import {setTimeout as delay} from 'node:timers/promises';
 import {CoreClient} from '../desktop/core-client.mjs';import {identity} from '../shared/spatial.mjs';
 const require=createRequire(import.meta.url),root=path.resolve(import.meta.dirname,'..');
-let modulePath=process.env.LUMEN_PLAYWRIGHT_MODULE;try{modulePath??=require.resolve('playwright');}catch{}
+let modulePath=process.env.RAYLOOM_PLAYWRIGHT_MODULE;try{modulePath??=require.resolve('playwright');}catch{}
 if(!modulePath){const cache=path.join(os.homedir(),'AppData/Local/npm-cache/_npx');for(const folder of fs.readdirSync(cache)){const candidate=path.join(cache,folder,'node_modules/playwright');if(fs.existsSync(path.join(candidate,'package.json'))){modulePath=candidate;break;}}}
-const {_electron}=require(modulePath),runtime=path.join(root,'artifacts','hardware-canvas-'+Date.now()),userDir=path.resolve(process.env.LUMEN_USER_DATA||path.join(root,'runtime','user-data'));
+const {_electron}=require(modulePath),runtime=path.join(root,'artifacts','hardware-canvas-'+Date.now()),userDir=path.resolve(process.env.RAYLOOM_USER_DATA||path.join(root,'runtime','user-data'));
 for(const relative of ['native-hardware/OpenRGB.json','hardware/studio/layout.json']){const source=path.join(userDir,relative),dest=path.join(runtime,relative);if(fs.existsSync(source)){fs.mkdirSync(path.dirname(dest),{recursive:true});fs.copyFileSync(source,dest);}}
 const report={physicalHardwareTested:true,runtime,checks:[],restored:false};let app,page,baseline;
 const call=(method,args={})=>page.evaluate(([method,args])=>window.rayloom.canvas(method,args),[method,args]);
@@ -12,7 +12,7 @@ const studio=(method,args={})=>page.evaluate(([method,args])=>window.rayloom.stu
 const wait=async fn=>{for(let i=0;i<150;i++){if(await fn())return;await delay(200);}throw Error('Hardware Canvas timeout');};
 const check=name=>{report.checks.push(name);console.log('PASS',name);};
 try{
- const env={...process.env,LUMEN_MODE:'hardware',LUMEN_USER_DATA:runtime};delete env.ELECTRON_RUN_AS_NODE;
+ const env={...process.env,RAYLOOM_MODE:'hardware',RAYLOOM_USER_DATA:runtime};delete env.ELECTRON_RUN_AS_NODE;
  app=await _electron.launch({executablePath:path.join(root,'node_modules/electron/dist/electron.exe'),args:[root],cwd:root,env,timeout:60000});page=await app.firstWindow();
  await wait(async()=>{const s=await page.evaluate(()=>window.rayloom.snapshot());return s.status?.pluginsReady&&s.status.detectionPercent===100;});
  const s=await studio('state'),snap=await page.evaluate(()=>window.rayloom.snapshot());assert.equal(s.mode,'hardware');baseline=snap.devices;report.devices=snap.devices.map(d=>d.name);fs.writeFileSync(path.join(runtime,'baseline.json'),JSON.stringify(baseline,null,2));

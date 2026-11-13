@@ -1,6 +1,6 @@
 // Real Electron UI regression checks. Always uses an isolated virtual studio.
 // npm run build && node scripts/test-ui.mjs
-// Optional: LUMEN_PLAYWRIGHT_MODULE=/absolute/path/to/playwright
+// Optional: RAYLOOM_PLAYWRIGHT_MODULE=/absolute/path/to/playwright
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
@@ -11,7 +11,7 @@ import {connectRuntime} from '../desktop/runtime-client.mjs';
 
 const require=createRequire(import.meta.url),root=path.resolve(import.meta.dirname,'..');
 function playwrightPath(){
- if(process.env.LUMEN_PLAYWRIGHT_MODULE)return process.env.LUMEN_PLAYWRIGHT_MODULE;
+ if(process.env.RAYLOOM_PLAYWRIGHT_MODULE)return process.env.RAYLOOM_PLAYWRIGHT_MODULE;
  try{return require.resolve('playwright');}catch{}
  const caches=[process.env.npm_config_cache,process.env.LOCALAPPDATA&&path.join(process.env.LOCALAPPDATA,'npm-cache'),path.join(os.homedir(),'AppData','Local','npm-cache'),path.join(os.homedir(),'.npm')].filter(Boolean);
  for(const cache of [...new Set(caches)]){
@@ -21,7 +21,7 @@ function playwrightPath(){
    if(fs.existsSync(path.join(candidate,'package.json')))return candidate;
   }
  }
- throw Error('Playwright is not installed locally. Set LUMEN_PLAYWRIGHT_MODULE to an existing Playwright package. This test does not download packages.');
+ throw Error('Playwright is not installed locally. Set RAYLOOM_PLAYWRIGHT_MODULE to an existing Playwright package. This test does not download packages.');
 }
 const {_electron}=require(playwrightPath());
 const runtime=fs.mkdtempSync(path.join(os.tmpdir(),'lumen-ui-'));
@@ -46,7 +46,7 @@ const step=async(name,fn)=>{
  const started=Date.now();await fn();report.checks.push({name,ms:Date.now()-started});console.log('PASS',name);
 };
 async function launch(){
- const env={...process.env,LUMEN_MODE:'virtual',LUMEN_USER_DATA:runtime,LUMEN_UI:'legacy'};delete env.ELECTRON_RUN_AS_NODE;delete env.LUMEN_SCREENSHOT;
+ const env={...process.env,RAYLOOM_MODE:'virtual',RAYLOOM_USER_DATA:runtime,RAYLOOM_UI:'legacy'};delete env.ELECTRON_RUN_AS_NODE;delete env.RAYLOOM_SCREENSHOT;
  const executablePath=process.platform==='win32'?path.join(root,'node_modules','electron','dist','electron.exe'):require(path.join(root,'node_modules','electron'));
  app=await _electron.launch({executablePath,args:[root],cwd:root,env,timeout:60000});
  page=await app.firstWindow({timeout:30000});page.setDefaultTimeout(12000);
@@ -77,7 +77,7 @@ const constantSource='<!doctype html><html><head><meta charset="utf-8"><meta pro
 
 try{
  await step('isolated Electron launch and virtual discovery',launch);
- if(process.env.LUMEN_UI_CLOSE_ONLY==='1')await step('isolated titlebar close',closeViaTitlebar);else{
+ if(process.env.RAYLOOM_UI_CLOSE_ONLY==='1')await step('isolated titlebar close',closeViaTitlebar);else{
  await step('fixed titlebar, bounded body and HeroUI scroll area',async()=>{
   const m=await page.evaluate(()=>{const title=document.querySelector('.titlebar'),scroll=document.querySelector('.studio-scroll'),r=title.getBoundingClientRect();return {bodyOverflow:document.body.scrollHeight-innerHeight,htmlOverflow:document.documentElement.scrollHeight-innerHeight,widthOverflow:document.documentElement.scrollWidth-innerWidth,titleTop:r.top,titleHeight:r.height,titleInsideScroll:scroll.contains(title),scrollOverflow:getComputedStyle(scroll).overflowY,scrollTop:scroll.getBoundingClientRect().top,scrollbarWidth:getComputedStyle(scroll).scrollbarWidth};});
   assert(m.bodyOverflow<=2&&m.htmlOverflow<=2&&m.widthOverflow<=2,JSON.stringify(m));assert.equal(m.titleTop,0);assert.equal(m.titleHeight,36);assert(!m.titleInsideScroll);assert(m.scrollTop>=36);assert(['auto','scroll'].includes(m.scrollOverflow));assert.equal(m.scrollbarWidth,'none');
@@ -278,7 +278,7 @@ try{
   assert.equal(await page.getByRole('tab',{name:'2D',exact:true}).getAttribute('aria-selected'),'true');await screenshot('06-restarted');
  });
  }
- if(process.env.LUMEN_UI_CLOSE_ONLY!=='1')await step('plugin read failure cannot trap navigation or interrupt lighting',async()=>{
+ if(process.env.RAYLOOM_UI_CLOSE_ONLY!=='1')await step('plugin read failure cannot trap navigation or interrupt lighting',async()=>{
   const before=await studio();
   await app.evaluate(({ipcMain})=>{ipcMain.removeHandler('rayloom:effects');ipcMain.handle('rayloom:effects',()=>{throw Error("[json.exception.out_of_range.403] key 'UserColors' not found");});});
   await page.getByRole('button',{name:'Расширенные инструменты',exact:true}).click();

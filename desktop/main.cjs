@@ -78,7 +78,7 @@ else app.whenReady().then(async()=>{
     if(action==='check')return updateService.check();
     if(action==='download')return updateService.download();
     if(action==='install'){
-      if(!fs.existsSync(path.join(root,'..','rayloom-install.json')))throw Error('Эта копия переносимая. Установите новую версию через Setup.');
+      if(!fs.existsSync(path.join(root,'..','..','rayloom-install.json')))throw Error('Эта копия переносимая. Установите новую версию через Setup.');
       pendingUpdateExe=updateService.installedPath();quitEngine=true;app.quit();return {status:'launching'};
     }
     throw Error('Unknown update action');

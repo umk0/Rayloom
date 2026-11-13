@@ -58,5 +58,6 @@ try{
   if(child.exitCode===null)child.kill();
  }
  const owned=path.resolve(dataDir),temp=path.resolve(os.tmpdir());
- if(path.dirname(owned)===temp&&path.basename(owned).startsWith('rayloom-portable-'))fs.rmSync(owned,{recursive:true,force:true});
+ if(process.env.RAYLOOM_TEST_KEEP==='1')console.error('Portable diagnostics kept at '+owned);
+ else if(path.dirname(owned)===temp&&path.basename(owned).startsWith('rayloom-portable-'))fs.rmSync(owned,{recursive:true,force:true});
 }

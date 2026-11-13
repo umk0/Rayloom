@@ -9,7 +9,7 @@ import {setTimeout as delay} from 'node:timers/promises';
 import {connectRuntime} from '../desktop/runtime-client.mjs';
 const require=createRequire(import.meta.url),root=path.resolve(import.meta.dirname,'..');
 function playwright(){
- if(process.env.LUMEN_PLAYWRIGHT_MODULE)return require(process.env.LUMEN_PLAYWRIGHT_MODULE);
+ if(process.env.RAYLOOM_PLAYWRIGHT_MODULE)return require(process.env.RAYLOOM_PLAYWRIGHT_MODULE);
  try{return require('playwright');}catch{}
  const cache=path.join(process.env.LOCALAPPDATA,'npm-cache/_npx');
  for(const entry of fs.readdirSync(cache)){const candidate=path.join(cache,entry,'node_modules/playwright');if(fs.existsSync(path.join(candidate,'package.json')))return require(candidate);}
@@ -23,7 +23,7 @@ const wait=async(fn)=>{for(let i=0;i<150;i++){if(await fn())return;await delay(6
 const check=async(name,fn)=>{await fn();report.checks.push(name);console.log('PASS',name);};
 const shot=async name=>{await delay(300);const data=await app.evaluate(async({BrowserWindow})=>(await BrowserWindow.getAllWindows()[0].capturePage()).toPNG().toString('base64'));fs.writeFileSync(path.join(output,name+'.png'),Buffer.from(data,'base64'));};
 try{
- const env={...process.env,LUMEN_MODE:'virtual',LUMEN_USER_DATA:runtime};delete env.ELECTRON_RUN_AS_NODE;
+ const env={...process.env,RAYLOOM_MODE:'virtual',RAYLOOM_USER_DATA:runtime};delete env.ELECTRON_RUN_AS_NODE;
  app=await _electron.launch({executablePath:path.join(root,'node_modules/electron/dist/electron.exe'),args:[root],cwd:root,env,timeout:60000});
  page=await app.firstWindow();page.setDefaultTimeout(12000);page.on('pageerror',e=>report.errors.push(e.message));
  await page.waitForFunction(async()=>{const s=await window.rayloom.snapshot();return s.mode==='virtual'&&!s.starting&&s.status?.pluginsReady;},{},{timeout:60000});

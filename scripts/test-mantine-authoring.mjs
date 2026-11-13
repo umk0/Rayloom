@@ -11,13 +11,13 @@ import {discoverLayout} from '../shared/spatial.mjs';
 
 const require=createRequire(import.meta.url),root=path.resolve(import.meta.dirname,'..');
 function playwright(){
-  if(process.env.LUMEN_PLAYWRIGHT_MODULE)return require(process.env.LUMEN_PLAYWRIGHT_MODULE);
+  if(process.env.RAYLOOM_PLAYWRIGHT_MODULE)return require(process.env.RAYLOOM_PLAYWRIGHT_MODULE);
   try{return require('playwright');}catch{}
   for(const base of [process.env.npm_config_cache,process.env.LOCALAPPDATA&&path.join(process.env.LOCALAPPDATA,'npm-cache'),path.join(os.homedir(),'AppData/Local/npm-cache'),path.join(os.homedir(),'.npm')].filter(Boolean)){
     const dir=path.join(base,'_npx');if(!fs.existsSync(dir))continue;
     for(const item of fs.readdirSync(dir)){const candidate=path.join(dir,item,'node_modules/playwright');if(fs.existsSync(path.join(candidate,'package.json')))return require(candidate);}
   }
-  throw Error('Use LUMEN_PLAYWRIGHT_MODULE to select an installed Playwright package.');
+  throw Error('Use RAYLOOM_PLAYWRIGHT_MODULE to select an installed Playwright package.');
 }
 const {_electron}=playwright(),runtime=fs.mkdtempSync(path.join(os.tmpdir(),'rayloom-authoring-'));
 const output=path.join(root,'output/playwright/authoring-'+new Date().toISOString().replace(/[:.]/g,'-'));
@@ -38,7 +38,7 @@ const editCode=async(value)=>{
 };
 
 try{
-  const env={...process.env,LUMEN_MODE:'virtual',LUMEN_USER_DATA:runtime};delete env.ELECTRON_RUN_AS_NODE;delete env.LUMEN_UI;delete env.LUMEN_SCREENSHOT;
+  const env={...process.env,RAYLOOM_MODE:'virtual',RAYLOOM_USER_DATA:runtime};delete env.ELECTRON_RUN_AS_NODE;delete env.RAYLOOM_UI;delete env.RAYLOOM_SCREENSHOT;
   app=await _electron.launch({executablePath:process.platform==='win32'?path.join(root,'node_modules/electron/dist/electron.exe'):require('electron'),args:[root],cwd:root,env,timeout:60000});
   page=await app.firstWindow();page.setDefaultTimeout(15000);
   page.on('pageerror',error=>report.pageErrors.push(error.message));

@@ -59,7 +59,7 @@ int startup(int argc, char* argv[], unsigned int ret_flags)
     \*-----------------------------------------------------*/
     ResourceManager::get()->WaitForInitialization();
 
-    if(qEnvironmentVariableIsSet("LUMEN_CORE_PIPE"))
+    if(qEnvironmentVariableIsSet("RAYLOOM_CORE_PIPE"))
     {
         return RunLumenHost(argc, argv);
     }

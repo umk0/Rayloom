@@ -21,7 +21,7 @@ function fixture(){
   'data/device-catalog.json','sdk/runtime.mjs','sdk/examples/reactor/manifest.json',
   'public/licenses/Mantine-MIT.txt','public/brand/rayloom.ico','public/brand/rayloom-256.png',
   'runtime/Rayloom-Agent.exe','runtime/node/node.exe','runtime/node/LICENSE',
-  'scripts/start-elevated-agent.ps1','scripts/register-background-task.ps1','scripts/stop-background-runtime.mjs',
+  'scripts/start-elevated-agent.ps1','scripts/register-background-task.ps1','scripts/prepare-uninstall.ps1','scripts/migrate-startup-task.ps1','scripts/stop-background-runtime.mjs',
   'LICENSE'
  ])write(name);
  for(const [dir,name] of Object.entries({effects:'OpenRGBEffectsPlugin.dll',scheduler:'OpenRGBSchedulerPlugin.dll','http-hook':'OpenRGBHttpHookPlugin.dll','hardware-sync':'OpenRGBHardwareSyncPlugin.dll',e131:'OpenRGBE131ReceiverPlugin.dll','visual-map':'OpenRGBVisualMapPlugin.dll',skin:'OpenRGBSkinPlugin.dll'}))write(`plugins/${dir}/release/${name}`);

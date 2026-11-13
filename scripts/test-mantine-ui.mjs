@@ -11,7 +11,7 @@ import {connectRuntime} from '../desktop/runtime-client.mjs';
 
 const require = createRequire(import.meta.url), root = path.resolve(import.meta.dirname, '..');
 function playwrightPath() {
-  if (process.env.LUMEN_PLAYWRIGHT_MODULE) return process.env.LUMEN_PLAYWRIGHT_MODULE;
+  if (process.env.RAYLOOM_PLAYWRIGHT_MODULE) return process.env.RAYLOOM_PLAYWRIGHT_MODULE;
   try { return require.resolve('playwright'); } catch {}
   const caches = [process.env.npm_config_cache, process.env.LOCALAPPDATA && path.join(process.env.LOCALAPPDATA, 'npm-cache'), path.join(os.homedir(), 'AppData', 'Local', 'npm-cache'), path.join(os.homedir(), '.npm')].filter(Boolean);
   for (const cache of new Set(caches)) {
@@ -21,7 +21,7 @@ function playwrightPath() {
       if (fs.existsSync(path.join(candidate, 'package.json'))) return candidate;
     }
   }
-  throw Error('Set LUMEN_PLAYWRIGHT_MODULE to an existing Playwright package. This test does not install dependencies.');
+  throw Error('Set RAYLOOM_PLAYWRIGHT_MODULE to an existing Playwright package. This test does not install dependencies.');
 }
 
 const {_electron} = require(playwrightPath());
@@ -63,8 +63,8 @@ const assertVirtual = async () => { const state = await snapshot(); assert.equal
 
 try {
   await step('default Mantine renderer opens an isolated virtual agent', async () => {
-    const env = {...process.env, LUMEN_MODE: 'virtual', LUMEN_USER_DATA: runtime};
-    for (const key of ['ELECTRON_RUN_AS_NODE', 'LUMEN_SCREENSHOT', 'LUMEN_LEGACY_UI', 'LUMEN_UI']) delete env[key];
+    const env = {...process.env, RAYLOOM_MODE: 'virtual', RAYLOOM_USER_DATA: runtime};
+    for (const key of ['ELECTRON_RUN_AS_NODE', 'RAYLOOM_SCREENSHOT', 'RAYLOOM_LEGACY_UI', 'RAYLOOM_UI']) delete env[key];
     const executablePath = process.platform === 'win32' ? path.join(root, 'node_modules', 'electron', 'dist', 'electron.exe') : require(path.join(root, 'node_modules', 'electron'));
     app = await _electron.launch({executablePath, args: [root], cwd: root, env, timeout: 60000});
     page = await app.firstWindow({timeout: 30000}); page.setDefaultTimeout(15000);

@@ -6,14 +6,14 @@ if(-not(Test-Path -LiteralPath $settingsPath -PathType Leaf)){exit 0}
 $settings=Get-Content -LiteralPath $settingsPath -Raw|ConvertFrom-Json
 if($settings.elevatedStartup -eq $true){
   $result=& (Join-Path $PSScriptRoot 'start-elevated-agent.ps1') -DataDir $DataDir -Operation Remove -NoStart
-  if($LASTEXITCODE -ne 0){throw ('Не удалось убрать задачу автозапуска: '+$result)}
+  if($LASTEXITCODE -ne 0){throw ('Could not remove startup task: '+$result)}
 }else{
   $registry='HKCU:\Software\Microsoft\Windows\CurrentVersion\Run'
   $run=Get-ItemProperty -LiteralPath $registry -Name Rayloom -ErrorAction SilentlyContinue
   if($run){
     $launcher=Join-Path (Split-Path -Parent $PSScriptRoot) 'runtime\Rayloom-Agent.exe'
     $expected='"'+$launcher+'" --data "'+$DataDir+'"'
-    if($run.Rayloom -ne $expected){throw 'Запись автозапуска Rayloom указывает на другой файл; автоматическое удаление остановлено.'}
+    if($run.Rayloom -ne $expected){throw 'Rayloom startup entry points to another file; uninstall stopped.'}
     Remove-ItemProperty -LiteralPath $registry -Name Rayloom
   }
 }

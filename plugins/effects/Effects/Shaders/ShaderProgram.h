@@ -1,0 +1,52 @@
+/*---------------------------------------------------------*\
+| ShaderProgram.h                                           |
+|                                                           |
+|   OpenRGB Effects Plugin Shader Program                   |
+|                                                           |
+|   This file is part of the OpenRGB Effects Plugin project |
+|   SPDX-License-Identifier: GPL-2.0-or-later               |
+\*---------------------------------------------------------*/
+
+#pragma once
+
+#include <vector>
+#include <nlohmann/json.hpp>
+#include "ShaderPass.h"
+
+using json = nlohmann::json;
+
+class ShaderProgram
+{
+
+public:
+    ShaderProgram();
+    ~ShaderProgram();
+
+    void Init();
+    QString Compile();
+    void Draw(const Uniforms& uniforms, QOpenGLFunctions*);
+    void SetVersion(std::string);
+    std::string GetVersion();
+    void CleanupGL();
+
+    QImage Image();
+    void Resize(int,int);
+
+    ShaderProgram* Copy();
+
+    ShaderPass* main_pass;
+    std::vector<ShaderPass*> passes;
+
+    bool recompile = false;
+    bool resize = false;
+    bool initialized = false;
+
+    static ShaderProgram* FromJSON(json);
+    json ToJSON();
+
+private:
+
+    std::string version = "110";
+    int width = 128;
+    int height = 128;
+};

@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>OpenRGBHttpHookPlugin.png</file>
+        <file>OpenRGBPlugins.ttf</file>
+    </qresource>
+</RCC>

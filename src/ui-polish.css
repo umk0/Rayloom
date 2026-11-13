@@ -1,0 +1,181 @@
+/* Page rhythm and responsive containment, shared by the existing workspaces. */
+:root{--ui-gap:16px;--ui-border:#354b56;--ui-muted:#9bb1bd}
+.studio-nav,.advanced-frame .sidebar{overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none}
+.studio-nav::-webkit-scrollbar,.advanced-frame .sidebar::-webkit-scrollbar{display:none}
+.studio-nav>* ,.advanced-frame .sidebar>*{flex-shrink:0}
+.studio-nav button,.advanced-frame .nav-item{min-height:40px;line-height:1.5}
+.studio-nav-bottom{padding-top:24px}
+.studio-page-head{align-items:flex-start}
+.studio-page-head>div,.studio-card,.studio-section,.group-editor,.group-library{min-width:0}
+.studio-page-head h1{line-height:1.25}
+.studio-page-head p{max-width:760px;line-height:1.65}
+.studio-section-head,.section-heading-plain{flex-wrap:wrap;row-gap:9px}
+.studio-section-head>h2,.section-heading-plain>h2{line-height:1.45}
+.studio-page-head .studio-local{padding-top:8px}
+.studio label{line-height:1.5}
+.studio input:not([type=checkbox]):not([type=range]):not([type=color]){min-height:40px}
+.studio input::placeholder,.shell input::placeholder,.shell textarea::placeholder{color:#91a6b1}
+.studio button,.shell button{touch-action:manipulation}
+.studio .studio-link,.shell .text-link{line-height:1.5;min-height:26px}
+.studio p,.shell .effect-description{overflow-wrap:anywhere}
+.studio .studio-fields{column-gap:12px;row-gap:16px;align-items:start}
+.studio .studio-source{font-size:11px!important;color:#9bb1bd!important}
+.studio .studio-actions{row-gap:12px}
+.studio .studio-actions>.button{min-height:36px}
+.studio-playbar{flex-wrap:wrap;row-gap:14px}
+.studio-playbar .play-target{min-width:175px}
+.studio-inspector{scroll-padding:18px;overscroll-behavior:contain}
+.studio-inspector::-webkit-scrollbar{display:none}
+.component-list{scroll-padding:8px;overscroll-behavior:contain}
+.component-list button{padding:14px 8px;gap:12px;border-radius:6px;min-height:64px}
+.component-list button>span{min-width:0;overflow-wrap:anywhere}
+.component-list strong{font-size:12px;line-height:1.5}
+.component-list small{font-size:10px;line-height:1.5}
+.studio-device-tools{gap:16px;align-items:center;flex-wrap:wrap}
+.studio-device-tools>div:first-child{min-width:220px}
+.studio-card h2{overflow-wrap:anywhere}
+.device-card-heading .connection-badge{line-height:1.4}
+.device-port{padding:16px 0;gap:12px 14px}
+.device-port small{font-size:10px;line-height:1.6}
+.device-save-bar{flex-wrap:wrap;line-height:1.5;box-shadow:0 6px 20px #0004}
+.group-library{position:sticky;top:18px}
+.group-tile{min-height:66px;gap:12px}
+.group-tile>span{min-width:0;flex:1}
+.group-tile small{font-size:10px;color:#9bb1bd}
+.group-editor>.studio-actions{gap:12px}
+.group-editor .group-member-scroll{padding:3px 5px 3px 3px;margin:0 -5px 0 -3px;overscroll-behavior:contain}
+.group-message{line-height:1.6}
+.studio-banner>div{min-width:0}
+.studio-banner button{min-height:32px}
+.studio-footer{flex-wrap:wrap;gap:10px;line-height:1.6;font-size:10px}
+.studio-toast{max-width:min(680px,calc(100vw - 32px));overflow-wrap:anywhere}
+.studio-toast>button{width:28px;height:28px;display:grid;place-items:center;border-radius:5px}
+.catalog-results{padding-right:5px;overscroll-behavior:contain}
+.catalog-results>div{align-items:flex-start}
+.catalog-results strong,.catalog-results span{min-width:0;overflow-wrap:anywhere}
+.game-values{flex-wrap:wrap;gap:16px 36px}
+.studio-empty{padding:36px 24px;line-height:1.6}
+.shell .settings-panel{min-width:0;padding:21px}
+.shell .settings-panel h2{font-size:14px;line-height:1.5}
+.shell .muted{font-size:12px;color:#9aaab5;line-height:1.6}
+.shell .form-field{font-size:12px;line-height:1.5;gap:9px}
+.shell .form-field input,.shell .form-field textarea{width:100%;min-width:0}
+.shell .number-field{font-size:12px;line-height:1.5}
+.shell .number-field>div{gap:10px;min-width:0}
+.shell .number-field input[type="number"]{flex-shrink:0;min-width:75px;min-height:38px}
+.shell .number-field input[type="range"]{min-width:30px;accent-color:var(--accent,#b4f17b)}
+.shell .common-fields,.shell .two-columns,.shell .three-columns{align-items:start;gap:8px 20px}
+.shell .two-columns>*,.shell .three-columns>*,.shell .common-fields>*{min-width:0}
+.shell .plugin-toolbar{padding:14px 16px;border:1px solid #354b56;border-radius:10px;background:var(--rayloom-panel,#192831);gap:10px;margin-bottom:20px}
+.shell .plugin-toolbar>.muted{min-width:140px}
+.shell .plugin-toolbar>input{min-width:140px;max-width:260px;flex:1}
+.shell .inline{flex-wrap:wrap;row-gap:12px}
+.shell .inline>.rayloom-select{flex:1;min-width:180px}
+.shell .inline>.number-field{flex:1;min-width:150px}
+.shell .inline>.button{flex-shrink:0}
+.shell .inline .form-field{min-width:160px;flex:1}
+.shell .inline input:not([type="color"]):not([type="checkbox"]):not([type="range"]){min-width:0}
+.shell .theme-colors{flex-wrap:wrap;gap:18px 32px}
+.shell .theme-colors>.form-field{min-width:64px}
+.shell .theme-colors input[type="color"]{width:44px;height:36px;max-width:none}
+.shell .array-row{flex-wrap:wrap;row-gap:6px;padding:6px 0}
+.shell .array-row>.form-field,.shell .array-row>.number-field{min-width:120px}
+.shell .field-group{padding:16px;line-height:1.6}
+.shell .field-group>summary{min-height:28px;line-height:1.5}
+.shell .library-heading{flex-wrap:wrap;align-items:flex-start}
+.shell .search-box{max-width:100%;min-width:0}
+.shell .search-box input{width:100%;min-width:0}
+.shell .map-layout,.shell .full-editor{gap:20px}
+.shell .led-position-list{padding-right:5px;overscroll-behavior:contain}
+.shell .rayloom-toast{z-index:160;max-width:min(650px,calc(100vw - 32px))}
+.shell .titlebar-brand>button{font-size:11px;border:0;background:none;color:#bfdba9;min-height:30px;padding:3px 8px;border-radius:5px}
+.shell .titlebar-brand>button:hover{background:#2a3b30}
+.shell .page-title{flex-wrap:wrap;align-items:flex-start}
+.shell .page-title>.inline{justify-content:flex-start}
+.shell footer{gap:12px;flex-wrap:wrap;line-height:1.6}
+.runtime-settings>.section-heading{padding:0 0 10px;margin-bottom:20px}
+.runtime-settings .runtime-card{border-color:var(--ui-border);background:var(--rayloom-panel,#192831);border-radius:12px;gap:18px}
+.runtime-settings .runtime-card p{color:#9bb1bd}
+.runtime-settings .runtime-card h2{font-size:15px;line-height:1.5;margin:0 0 9px}
+.runtime-loading{display:flex;align-items:center;gap:12px;padding:28px 0;color:#aec3cf}
+.runtime-settings>.error{padding:12px 15px;border:1px solid #8c535e;border-radius:9px;background:#3b252b}
+.canvas-editor-toolbar{row-gap:14px;flex-wrap:wrap}
+.canvas-document-actions{max-width:none}
+.canvas-source-panel,.canvas-preview-panel,.canvas-parameters{min-width:0}
+.canvas-run-buttons{flex-wrap:wrap}
+.canvas-panel-title{flex-wrap:wrap;gap:9px}
+.canvas-panel-title>span{line-height:1.5}
+.canvas-author-help>summary{padding:3px 0;min-height:30px}
+.canvas-author-help.rayloom-disclosure{padding:0}
+.shell .map-tabs{min-width:0;max-width:100%}
+.shell .map-tabs [data-slot="tabs-list-container"]{width:100%}
+.shell .map-tabs [data-slot="tabs-tab"]{white-space:nowrap}
+.canvas-help-scroll{scroll-padding:12px;overscroll-behavior:contain}
+@media(max-width:1100px){
+ .studio-workspace{grid-template-columns:minmax(0,1fr) 268px;gap:14px}
+ .studio-effect-settings{gap:12px}
+ .groups-workspace{grid-template-columns:210px minmax(0,1fr);gap:16px}
+ .group-library,.group-editor{padding:17px}
+ .shell .full-editor,.shell .map-layout{grid-template-columns:minmax(0,1fr) 250px;gap:16px}
+ .shell .three-columns{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .shell .content{padding:24px 20px}
+}
+@media(max-width:950px){
+ .studio-workspace{grid-template-columns:minmax(0,1fr)}
+ .studio-inspector{position:static;max-height:none;overflow:visible}
+ .studio-inspector>.component-list{max-height:360px}
+ .studio-section-head>span{display:block}
+ .groups-workspace{grid-template-columns:minmax(0,1fr)}
+ .group-library{position:static}
+ .studio-page-head{gap:14px;flex-wrap:wrap}
+ .studio h1{font-size:25px}
+ .studio-toast{left:50%}
+ .shell .full-editor,.shell .map-layout{grid-template-columns:minmax(0,1fr)}
+ .shell .sidebar{width:180px;padding:20px 10px}
+ .shell>main{margin-left:180px}
+ .shell .workspace{margin:22px 0}
+ .shell .brand{font-size:21px}
+ .shell .content{padding:22px 16px}
+ .shell header{padding:0 18px;gap:12px}
+ .shell .development{display:none}
+ .shell .rayloom-toast{left:50%}
+}
+@media(max-width:740px){
+ .studio-nav{width:150px;padding:20px 8px}
+ .studio-scroll{left:150px}
+ .studio-logo{margin:0 4px 25px;gap:7px}
+ .studio-logo strong{font-size:20px}
+ .studio-main{padding:18px 14px}
+ .studio-section{padding:16px}
+ .studio-card{padding:18px}
+ .studio-playbar{padding:14px;gap:12px}
+ .studio-playbar .play-target{width:100%;flex-basis:100%;min-width:0}
+ .studio-playbar .rayloom-slider{max-width:none}
+ .studio-effect-settings.effect-main-settings{grid-template-columns:minmax(0,1fr)}
+ .studio-device-tools>div:first-child{min-width:0;flex-basis:100%}
+ .studio-device-tools>.rayloom-select{width:100%}
+ .studio .effect-card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .studio .frame-performance{gap:8px 12px}
+ .studio .frame-performance .studio-link{margin-left:0}
+ .space-save{flex-wrap:wrap}
+ .device-port{grid-template-columns:minmax(0,1fr)}
+ .device-port>.studio-link{grid-column:auto}
+ .device-port>button{justify-self:start}
+ .canvas-library-row,.canvas-parameter-grid{grid-template-columns:minmax(0,1fr)}
+ .canvas-workflow{grid-column:auto;flex-wrap:wrap;justify-content:flex-start}
+ .canvas-document-name{min-width:0;width:100%;max-width:none;flex-basis:100%}
+ .canvas-document-actions{justify-content:flex-start}
+ .canvas-preview-panel{display:block}
+ .canvas-preview-image{aspect-ratio:1.6}
+ .shell .sidebar{width:155px}
+ .shell>main{margin-left:155px}
+ .shell .nav-item{font-size:11px;padding:10px 8px;gap:9px}
+ .shell .two-columns,.shell .three-columns,.shell .common-fields,.shell .catalog-grid,.shell .plugin-grid{grid-template-columns:minmax(0,1fr)}
+ .shell .plugin-toolbar>.button{flex:1}
+ .shell .plugin-toolbar>.muted{flex-basis:100%}
+ .shell h1{font-size:25px}
+ .shell .settings-panel{padding:17px}
+ .runtime-settings .runtime-card{padding:18px;gap:12px}
+ .runtime-card>svg{width:20px;height:20px}
+}
+@media(prefers-reduced-motion:reduce){.studio-nav button,.shell button{transition:none}}

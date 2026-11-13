@@ -1,0 +1,6 @@
+.rayloom-device-layout-preview { display: flex; flex-direction: column; justify-content: center; gap: 6px; min-width: 0; margin: 0; }
+.rayloom-device-layout-preview-svg { display: block; width: 100%; height: var(--rayloom-layout-preview-height, 112px); min-height: 64px; overflow: hidden; }
+.rayloom-device-layout-preview-led { stroke: var(--mantine-color-gray-6, #868e96); stroke-width: 1px; vector-effect: non-scaling-stroke; }
+.rayloom-device-layout-preview[data-state=disabled] .rayloom-device-layout-preview-led,
+.rayloom-device-layout-preview[data-state=unavailable] .rayloom-device-layout-preview-led { stroke: var(--mantine-color-dimmed, #a9b2ba); stroke-dasharray: 2 2; }
+.rayloom-device-layout-preview figcaption { color: var(--mantine-color-dimmed, #a9b2ba); font-size: var(--mantine-font-size-xs, 12px); line-height: 1.4; text-align: center; overflow-wrap: anywhere; }

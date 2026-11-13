@@ -1,0 +1,11 @@
+{
+    "Id" : "org.openrgb.openrgbhardwaresyncplugin",
+    "Name" : "OpenRGB Hardware Sync Plugin",
+    "VendorId" : "openrgb",
+    "Version" : "1.0.0",
+    "VersionStr" : "1.0",
+    "Url" : "https://gitlab.com/OpenRGBDevelopers/OpenRGBHardwareSyncPlugin",
+    "Commit" : "d9994174df2e4f0b8ff0bb6729a0d9925f2121ca",
+    "Description" : "Sync colors with hardware measures",
+    "OpenRGBPluginAPIVersion" : 5
+}

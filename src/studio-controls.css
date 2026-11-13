@@ -1,0 +1,47 @@
+/* Shared HeroUI controls: stable layout in both the studio and full-screen portals. */
+.rayloom-select.rayloom-select{display:flex;flex-direction:column;min-width:0;gap:8px}
+.rayloom-select.rayloom-select>[data-slot="label"]{font-size:12px;line-height:1.5;color:#b8cbd5}
+.rayloom-select.rayloom-select [data-slot="select-trigger"]{min-height:40px;gap:10px;align-items:center}
+.rayloom-select.rayloom-select [data-slot="select-value"]{min-width:0;flex:1;text-align:left}
+.rayloom-select.rayloom-select [data-slot="select-value"]>div{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rayloom-select.rayloom-select [data-slot="select-value"] small{display:none}
+.rayloom-select-popover.rayloom-select-popover{max-width:calc(100vw - 24px);overflow-y:auto;overscroll-behavior:contain;scroll-padding:8px}
+.rayloom-select-popover.rayloom-select-popover [role="option"]{min-height:40px;align-items:center;line-height:1.45}
+.rayloom-select-popover [role="option"]>div{min-width:0;overflow-wrap:anywhere}
+.rayloom-select-popover [role="option"]>div>strong,.rayloom-select-popover [role="option"]>div>small{display:block}
+.rayloom-select-popover [role="option"][data-disabled]{opacity:.45}
+.rayloom-select-popover small{line-height:1.5;white-space:normal}
+.rayloom-switch.rayloom-switch{width:100%;min-width:0;display:flex;align-items:stretch;gap:0}
+.rayloom-switch.rayloom-switch [data-slot="switch-content"]{display:flex;align-items:center;justify-content:flex-start;gap:12px;min-height:40px;width:100%;padding:6px 0;text-align:left;white-space:normal;line-height:1.5;border-radius:6px}
+.rayloom-switch.rayloom-switch [data-slot="switch-control"]{flex:0 0 auto}
+.rayloom-switch.rayloom-switch [data-slot="label"]{display:block;min-width:0;font-size:12px;line-height:1.5;overflow-wrap:anywhere;color:#b8cbd5}
+.rayloom-switch.rayloom-switch [data-slot="switch-content"][data-focus-visible]{outline:2px solid var(--accent,#b4f17b);outline-offset:3px}
+.rayloom-switch.rayloom-switch [data-slot="switch-content"][data-disabled]{cursor:default;opacity:.5}
+.inline.wrap>.rayloom-switch.rayloom-switch{width:auto;max-width:100%;margin:3px 0}
+.rayloom-slider.rayloom-slider{min-width:120px;gap:10px}
+.rayloom-slider.rayloom-slider .rayloom-slider-heading{align-items:baseline;min-height:18px}
+.rayloom-slider.rayloom-slider [data-slot="slider-track"]{min-height:24px}
+.rayloom-slider.rayloom-slider [data-slot="slider-thumb"]{width:16px;height:16px}
+.rayloom-tabs.rayloom-tabs [data-slot="tabs-list-container"]{max-width:100%;border-radius:10px;background:transparent}
+.rayloom-tabs.rayloom-tabs [data-slot="tabs-tab"]{min-height:36px;flex:1 0 auto;width:auto;line-height:1.4}
+.bounded-number.bounded-number{min-width:0;display:flex;flex-direction:column;gap:8px;color:#b8cbd5;font-size:12px}
+.bounded-number>span{line-height:1.5}
+.bounded-number.bounded-number>input{min-height:40px;min-width:0;width:100%;padding:9px 10px;border:1px solid #40525d;border-radius:7px;background:#111d25;color:#e1e9ec;font-size:12px;font-variant-numeric:tabular-nums;outline-offset:2px}
+.bounded-number.bounded-number>small{min-height:14px;font-size:10px;line-height:1.5;color:#92aab8}
+.studio-color-popover.studio-color-popover{z-index:1250!important;max-width:calc(100vw - 24px);max-height:calc(100vh - 32px);overflow-y:auto;overscroll-behavior:contain}
+.studio-color-presets button{min-width:22px;min-height:22px}
+.studio-color-trigger.studio-color-trigger{min-height:40px}
+.rayloom-disclosure.rayloom-disclosure{width:100%;border:1px solid #354b56;border-radius:10px;background:#14232c;margin:16px 0;overflow:hidden}
+.rayloom-disclosure.rayloom-disclosure [data-slot="accordion-heading"]{margin:0;font-size:12px}
+.rayloom-disclosure.rayloom-disclosure [data-slot="accordion-trigger"]{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-height:46px;padding:12px 14px;color:#c9dde7;font-size:12px;line-height:1.5;text-align:left}
+.rayloom-disclosure [data-slot="accordion-indicator"]{flex:none;width:16px;height:16px}
+.rayloom-disclosure.rayloom-disclosure [data-slot="accordion-body"]{padding:4px 14px 16px}
+.rayloom-disclosure [data-slot="accordion-trigger"]:focus-visible{outline-offset:-3px}
+.rayloom-disclosure [data-slot="accordion-body"]>.fields:first-child>.form-field:first-child{margin-top:8px}
+.group-member-choice.group-member-choice{display:block!important;padding:0;overflow:visible}
+.group-member-choice [data-slot="checkbox-content"]{display:flex;flex-direction:row;align-items:center;justify-content:flex-start;gap:12px;width:100%;padding:13px 12px;text-align:left;white-space:normal;border-radius:8px}
+.group-member-choice [data-slot="checkbox-control"]{flex:none;width:18px;height:18px;border:1px solid #7a929f;border-radius:5px;background:#111f28}
+.group-member-choice [data-slot="label"]{display:block;min-width:0}
+.group-member-choice [data-slot="checkbox-content"][data-focus-visible]{outline:2px solid var(--accent,#b4f17b);outline-offset:3px}
+.group-member-choice small{overflow-wrap:anywhere}
+@media(prefers-reduced-motion:reduce){.rayloom-disclosure [data-slot="accordion-panel"]{transition:none}}

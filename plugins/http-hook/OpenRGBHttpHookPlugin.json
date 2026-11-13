@@ -1,0 +1,11 @@
+{
+    "Id" : "org.openrgb.openrgbhttphookplugin",
+    "Name" : "OpenRGB HTTP Hook Plugin",
+    "VendorId" : "openrgb",
+    "Version" : "1.0.0",
+    "VersionStr" : "1.0",
+    "Url" : "https://gitlab.com/OpenRGBDevelopers/OpenRGBHttpHookPlugin",
+    "Commit" : "4a98997188959b237639e625af415bcb640ec321",
+    "Description" : "Expose webhooks to control lighting",
+    "OpenRGBPluginAPIVersion" : 5
+}

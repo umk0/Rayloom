@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2026 Adam Honse, OpenRGB Team -->
+<component type="addon">
+  <id>org.openrgb.OpenRGB.Plugin.Skin</id>
+  <extends>org.openrgb.OpenRGB</extends>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-2.0-or-later</project_license>
+  <developer id="org.openrgb">
+    <name>Adam Honse, OpenRGB Team</name>
+  </developer>
+
+  <name>OpenRGB Skin Plugin</name>
+  <icon type="stock">openrgb-skin-plugin</icon>
+
+  <content_rating type="oars-1.0" />
+
+  <summary>Skin plugin for OpenRGB that customizes the OpenRGB look and feel</summary>
+
+  <description>
+    <p>
+      The OpenRGB Skin Plugin is a plugin for OpenRGB that allows customizing
+      the look and feel of OpenRGB with custom skins.  Skins are Qt stylesheet
+      files that change the colors, fonts, and controls of the OpenRGB user
+      interface.
+    </p><p>
+      Features
+    </p>
+    <ul>
+      <li>Apply skins from the skins folder</li>
+      <li>Load skins from disk</li>
+      <li>Load the current skin automatically at startup</li>
+    </ul>
+  </description>
+
+  <releases>
+    <release version="1.0" date="2026-10-16"></release>
+    <release version="1.0~rc2" date="2025-09-14" type="development"></release>
+    <release version="0.9" date="2023-07-11"></release>
+    <release version="0.8" date="2022-12-03"></release>
+  </releases>
+
+  <screenshots>
+    <screenshot type="default">
+      <image>https://gitlab.com/OpenRGBDevelopers/OpenRGBSkinPlugin/-/raw/master/Documentation/Images/OpenRGBSkinPlugin_SystemTheme.png</image>
+      <caption>OpenRGB Skin Plugin with System Theme on KDE</caption>
+    </screenshot>
+    <screenshot type="default">
+      <image>https://gitlab.com/OpenRGBDevelopers/OpenRGBSkinPlugin/-/raw/master/Documentation/Images/OpenRGBSkinPlugin_QtFusionTheme.png</image>
+      <caption>OpenRGB Skin Plugin with Qt Fusion Theme</caption>
+    </screenshot>
+    <screenshot type="default">
+      <image>https://gitlab.com/OpenRGBDevelopers/OpenRGBSkinPlugin/-/raw/master/Documentation/Images/OpenRGBSkinPlugin_CherryTreeTheme.png</image>
+      <caption>OpenRGB Skin Plugin with imported Cherry Tree Theme</caption>
+    </screenshot>
+    <screenshot type="default">
+      <image>https://gitlab.com/OpenRGBDevelopers/OpenRGBSkinPlugin/-/raw/master/Documentation/Images/OpenRGBSkinPlugin_IndustrialTheme.png</image>
+      <caption>OpenRGB Skin Plugin with imported Industrial Theme</caption>
+    </screenshot>
+  </screenshots>
+
+  <keywords>
+    <keyword>rgb</keyword>
+    <keyword>lighting</keyword>
+    <keyword>plugin</keyword>
+    <keyword>skin</keyword>
+    <keyword>theme</keyword>
+  </keywords>
+
+  <url type="bugtracker">https://gitlab.com/OpenRGBDevelopers/OpenRGBSkinPlugin/-/issues</url>
+  <url type="donation">https://gitlab.com/CalcProgrammer1/OpenRGB/-/blob/master/README.md#support-openrgb</url>
+  <url type="help">https://gitlab.com/OpenRGBDevelopers/OpenRGBSkinPlugin/-/blob/master/README.md</url>
+  <url type="homepage">https://gitlab.com/OpenRGBDevelopers/OpenRGBSkinPlugin</url>
+</component>

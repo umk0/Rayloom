@@ -1,0 +1,24 @@
+id: org.openrgb.OpenRGB.Plugin.Scheduler
+branch: '5'
+extension-tag: org.openrgb.OpenRGB.Plugin
+build-extension: true
+separate-locales: false
+
+runtime: org.openrgb.OpenRGB
+runtime-version: 'master'
+sdk: org.kde.Sdk//6.10
+
+build-options:
+  prefix: /app/lib/openrgb/plugins/Scheduler
+
+modules:
+  - name: openrgb-plugin-scheduler
+    buildsystem: qmake
+    post-install:
+      - mv ${FLATPAK_DEST}/lib/openrgb/plugins/libOpenRGBSchedulerPlugin.so ${FLATPAK_DEST}/libOpenRGBSchedulerPlugin.so
+      - rm -rf ${FLATPAK_DEST}/lib
+      - install -Dm644 OpenRGBSchedulerPlugin.png ${FLATPAK_DEST}/share/icons/hicolor/512x512/apps/openrgb-scheduler-plugin.png
+    sources:
+      - type: dir
+        path: ../
+

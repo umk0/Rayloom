@@ -1,0 +1,41 @@
+.port-inspector{display:flex;flex-direction:column;gap:22px;min-width:0;font-size:12px;color:var(--rayloom-text,#dce8ed)}
+.port-inspector section{display:flex;flex-direction:column;gap:12px;min-width:0}
+.port-inspector p{margin:0;color:var(--rayloom-muted,#96aab5);font-size:11px;line-height:1.65;overflow-wrap:anywhere}
+.port-inspector .port-back{align-self:flex-start;margin-left:-8px;margin-bottom:2px}
+.port-inspector .port-name-field{display:flex;flex-direction:column;gap:8px;margin:0}
+.port-inspector .port-name-field input{width:100%;min-width:0;font-size:13px;line-height:1.5;padding:10px 11px;border:1px solid #3a515d;border-radius:8px;background:#11212a;color:#e1ecf2}
+.port-inspector .port-name-field label{font-size:11px;font-weight:500;color:#b3c7d1}
+.port-inspector .port-source{font-size:11px;color:#a9c0cd;line-height:1.6}
+.port-inspector .port-source span{display:block;color:#839daa;font-size:10px;margin-top:3px}
+.port-connection{display:flex;align-items:center;gap:7px;font-size:10px;color:#a3b2bb}
+.port-connection i{width:6px;height:6px;border-radius:50%;background:#8595a0}
+.port-connection.is-connected{color:#b8d89e}.port-connection.is-connected i{background:#a8d68d}
+.port-identify-section{padding:14px;border:1px solid #334c57;border-radius:11px;background:#142731}
+.port-inspector .port-identify-section button{width:100%;justify-content:flex-start;min-height:36px;white-space:normal;text-align:left}
+.port-inspector .identify-port-button{margin:0}
+.port-inspector .port-participation{padding-bottom:20px;border-bottom:1px solid #304750}
+.port-inspector .port-participation>.rayloom-switch{margin:0;min-height:34px}
+.port-inspector .port-participation>.bounded-number{margin-top:4px}
+.port-inspector .section-heading-plain{margin:0;gap:10px}
+.port-inspector .section-heading-plain h3{margin:0;font-size:12px;color:#d7e5ec;font-weight:600}
+.port-inspector .studio-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:0}
+.port-inspector .bounded-number{display:flex;flex-direction:column;gap:8px;margin:0;min-width:0;color:#b7cbd5;font-size:11px;line-height:1.5}
+.port-inspector .bounded-number input{width:100%;min-width:0;padding:9px 10px;border:1px solid #405864;border-radius:7px;background:#11212a;color:#dfebf0;font-size:12px;font-variant-numeric:tabular-nums}
+.port-inspector .bounded-number small{line-height:1.5}
+.port-inspector .spatial-reset-pose{margin:0;padding:9px!important;align-self:flex-start;text-align:left;font-size:11px!important;white-space:normal}
+.port-inspector .port-accordion{display:flex;flex-direction:column;gap:10px;min-width:0}
+.port-accordion>[data-slot=accordion-item]{margin:0;border:1px solid #334a55;border-radius:9px;overflow:hidden;background:#14232c}
+.port-accordion [data-slot=accordion-heading]{margin:0;font-size:12px;font-weight:500}
+.port-accordion [data-slot=accordion-trigger]{display:flex;justify-content:space-between;gap:12px;width:100%;min-height:48px;text-align:left;white-space:normal;font-size:11px;line-height:1.5;padding:13px 12px;color:#c1d3dd;border-radius:0}
+.port-accordion [data-slot=accordion-trigger]>span{display:flex;align-items:center;gap:8px;min-width:0}
+.port-accordion [data-slot=accordion-indicator]{width:15px;height:15px;flex-shrink:0}
+.port-accordion [data-slot=accordion-body]{display:flex;flex-direction:column;gap:14px;padding:0 12px 16px;min-width:0}
+.port-accordion .rayloom-switch{margin:0;min-height:36px}
+.port-accordion .calibration-colors{display:flex;flex-wrap:wrap;gap:7px;margin:0}
+.port-accordion .calibration-colors button{min-width:0;flex:1 0 74px;padding:8px 6px;font-size:10px;white-space:normal}
+.port-accordion .calibration-colors i{background:var(--test-color);width:7px;height:7px;flex-shrink:0;border-radius:50%}
+.port-accordion .port-empty-hint{padding:11px;border-radius:8px;background:#1e313b}
+.port-accordion .matrix-editor{min-width:0}.port-accordion .matrix-editor .studio-fields{gap:10px}
+.port-accordion .matrix-editor .studio-actions{display:flex;flex-wrap:wrap;gap:8px}
+.port-accordion .matrix-editor .studio-actions button{width:100%;white-space:normal;height:auto;min-height:34px;line-height:1.5}
+.port-accordion .port-template-save{align-self:flex-start;white-space:normal;min-height:34px}

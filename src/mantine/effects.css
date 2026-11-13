@@ -1,0 +1,38 @@
+.rayloom .rayloom-grow { flex: 1; min-width: 0; }
+.rayloom .rayloom-setting-switch { padding-block: 4px; }
+.rayloom .rayloom-setting-switch .mantine-Switch-body { align-items: center; gap: 4px; }
+.rayloom .rayloom-setting-switch .mantine-Switch-label { line-height: 1.5; padding-inline-start: 12px; }
+.rayloom .rayloom-disclosure .mantine-Accordion-item { background: transparent; border-color: var(--mantine-color-default-border); }
+.rayloom .rayloom-disclosure .mantine-Accordion-control { min-height: 46px; }
+.rayloom .rayloom-disclosure .mantine-Accordion-content { padding-top: 12px; padding-bottom: 18px; }
+.rayloom .rayloom-effect-parameters { min-width: 0; }
+.rayloom .rayloom-effect-strip { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)) minmax(130px, 1.1fr); gap: 12px; }
+.rayloom .rayloom-effect-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(195px, 1fr)); gap: 16px; }
+.rayloom .rayloom-effect-card { display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--mantine-color-default-border); border-radius: var(--mantine-radius-md); background: var(--mantine-color-body); min-width: 0; text-align: start; transition: border-color 120ms ease, box-shadow 120ms ease; }
+.rayloom .rayloom-effect-card:hover { border-color: var(--mantine-primary-color-5); }
+.rayloom .rayloom-effect-card:focus-visible { outline: 2px solid var(--mantine-primary-color-5); outline-offset: 3px; }
+.rayloom .rayloom-effect-card.is-selected { border-color: var(--mantine-primary-color-5); box-shadow: 0 0 0 1px var(--mantine-primary-color-5); }
+.rayloom .rayloom-effect-card-visual { position: relative; aspect-ratio: 2 / 1; width: 100%; background: #111719; overflow: hidden; }
+.rayloom .effect-card-preview { display: block; width: 100%; height: 100%; object-fit: fill; }
+.rayloom .effect-preview-status { position: absolute; inset: auto 0 0; min-height: 22px; padding: 5px 7px; background: linear-gradient(transparent, rgb(0 0 0 / 80%)); color: #f4f6f7; font-size: 9px; line-height: 1.25; display: flex; align-items: center; gap: 4px; pointer-events: none; }
+.rayloom .effect-preview-status i { flex: 0 0 4px; width: 4px; height: 4px; border-radius: 50%; background: #9babb0; }
+.rayloom .effect-preview-status.is-active i { background: var(--mantine-primary-color-5); }
+.rayloom .effect-preview-status.is-needs-input i, .rayloom .effect-preview-status.is-error i { background: #ebbb70; }
+.rayloom .rayloom-effect-check { position: absolute; top: 8px; right: 8px; width: 25px; height: 25px; display: grid; place-items: center; border-radius: 50%; color: #152015; background: var(--mantine-primary-color-5); }
+.rayloom .rayloom-effect-card-copy { padding: 12px; display: flex; flex-direction: column; align-items: flex-start; gap: 7px; }
+.rayloom .rayloom-all-effects { height: 100%; min-height: 105px; white-space: normal; }
+.rayloom .rayloom-native-editor { min-width: 0; }
+.rayloom .rayloom-back-button { align-self: flex-start; margin-inline-start: -12px; }
+.rayloom .rayloom-native-editor-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, 320px); align-items: start; gap: 20px; }
+.rayloom .rayloom-native-fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+.rayloom .rayloom-native-zone + .rayloom-native-zone { border-top: 1px solid var(--mantine-color-default-border); padding-top: 16px; }
+.rayloom .rayloom-native-leds { display: flex; gap: 2px; flex-wrap: wrap; }
+.rayloom .rayloom-native-leds i { width: 8px; height: 14px; border-radius: 2px; border: 1px solid rgb(255 255 255 / 8%); }
+.rayloom .rayloom-code-input textarea { font-family: Consolas, 'Liberation Mono', monospace; font-size: 12px; line-height: 1.6; tab-size: 2; }
+.rayloom .rayloom-code-log { overflow-wrap: anywhere; white-space: pre-wrap; max-height: 240px; overflow: auto; }
+.rayloom .rayloom-shader-preview { max-width: 100%; width: 320px; image-rendering: pixelated; border-radius: var(--mantine-radius-sm); }
+.rayloom .rayloom-screen-region { position: relative; touch-action: none; user-select: none; overflow: hidden; cursor: crosshair; border: 1px solid var(--mantine-color-default-border); border-radius: var(--mantine-radius-sm); }
+.rayloom .rayloom-screen-region img { display: block; width: 100%; height: auto; pointer-events: none; }
+.rayloom .rayloom-screen-selection { position: absolute; border: 2px solid var(--mantine-primary-color-5); background: rgb(194 238 135 / 15%); pointer-events: none; }
+@media (max-width: 1000px) { .rayloom .rayloom-native-editor-grid { grid-template-columns: minmax(0, 1fr); } .rayloom .rayloom-effect-strip { grid-template-columns: repeat(4, minmax(0, 1fr)); } .rayloom .rayloom-all-effects { grid-column: 1 / -1; min-height: 38px; } }
+@media (prefers-reduced-motion: reduce) { .rayloom .rayloom-effect-card { transition: none; } }

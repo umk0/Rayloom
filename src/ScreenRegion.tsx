@@ -1,0 +1,10 @@
+import React,{useRef,useState} from 'react';
+import {Button} from '@heroui/react';
+
+export function ScreenRegion({value,onChange,notify}:{value:any;onChange:(v:any)=>void;notify:(s:string)=>void}){
+ const [frame,setFrame]=useState<any>(null),[busy,setBusy]=useState(false);
+ const start=useRef<{x:number;y:number}|null>(null);
+ const capture=async()=>{setBusy(true);try{setFrame({...await window.rayloom.effects('screen.capture',{index:value.screen_index}),index:value.screen_index});}catch(e){notify(String(e));}finally{setBusy(false);}};
+ const point=(e:React.PointerEvent<HTMLDivElement>)=>{const r=e.currentTarget.getBoundingClientRect();return {x:Math.max(0,Math.min(frame.width-1,Math.round((e.clientX-r.left)*frame.width/r.width))),y:Math.max(0,Math.min(frame.height-1,Math.round((e.clientY-r.top)*frame.height/r.height)))};};
+ return <div className="screen-region"><Button size="sm" variant="secondary" isDisabled={busy} onPress={()=>void capture()}>{busy?'Получение кадра…':'Выделить область на снимке экрана'}</Button>{frame&&frame.index===value.screen_index&&<><p className="muted spaced">Проведите мышью по изображению. Снимок остаётся в памяти до закрытия редактора.</p><div className="screen-region-image" onPointerDown={e=>{e.currentTarget.setPointerCapture(e.pointerId);start.current=point(e);}} onPointerMove={e=>{if(!start.current)return;const p=point(e),s=start.current;onChange({...value,left:Math.min(p.x,s.x),top:Math.min(p.y,s.y),width:Math.max(1,Math.abs(p.x-s.x)),height:Math.max(1,Math.abs(p.y-s.y))});}} onPointerUp={()=>{start.current=null;}} onPointerCancel={()=>{start.current=null;}}><img src={frame.image} alt="Выбор области захвата Ambient" draggable={false}/><div className="screen-region-selection" style={{left:100*value.left/frame.width+'%',top:100*value.top/frame.height+'%',width:100*value.width/frame.width+'%',height:100*value.height/frame.height+'%'}}/></div><Button size="sm" variant="tertiary" onPress={()=>setFrame(null)}>Закрыть снимок</Button></>}</div>;
+}

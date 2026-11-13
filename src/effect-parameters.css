@@ -1,0 +1,17 @@
+.effect-parameters{margin-top:20px;padding:20px;border:1px solid var(--border,#ffffff14);border-radius:18px;background:var(--surface,#ffffff04);min-width:0}
+.effect-parameters-heading{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:baseline;justify-content:space-between;margin-bottom:16px}
+.effect-parameters-heading h3{margin:0;font-size:15px;font-weight:650}
+.effect-parameters-heading>span,.effect-parameter-note,.effect-parameter small,.effect-parameter-extra p{color:var(--muted,#a9a6b7);font-size:12px;line-height:1.6}
+.effect-parameter-note{margin:0 0 16px}
+.effect-parameters-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:22px 28px;align-items:start}
+.effect-parameter{min-width:0;display:grid;gap:8px}
+.effect-parameters .rayloom-disclosure{margin-top:20px}
+.effect-parameter-palette{min-width:0;margin:0;padding:0;border:0;grid-column:1/-1}
+.effect-parameter-palette legend{font-size:13px;font-weight:600;margin-bottom:12px}
+.effect-palette-colors{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:12px;max-height:280px;overflow:auto;scrollbar-width:thin}
+.effect-palette-entry{display:flex;align-items:end;gap:6px}
+.effect-palette-entry .studio-color-field{min-width:135px}
+.effect-palette-entry>button{margin-bottom:3px}
+.effect-parameter-extra{padding-top:12px}
+.effect-parameter-extra p{margin-bottom:12px}
+@media(max-width:700px){.effect-parameters{padding:16px}.effect-parameters-grid{grid-template-columns:minmax(0,1fr)}}

@@ -1,0 +1,7 @@
+[submodule "OpenRGB"]
+	path = OpenRGB
+	url = https://gitlab.com/CalcProgrammer1/OpenRGB.git
+	branch = master
+[submodule "dependencies/cpp-httplib"]
+	path = dependencies/cpp-httplib
+	url = https://github.com/yhirose/cpp-httplib.git

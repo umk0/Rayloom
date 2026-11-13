@@ -1,0 +1,9 @@
+.rayloom-device-layout-editor { min-width: 0; }
+.rayloom-device-layout-editor .rayloom-layout-fieldset { margin: 0; padding: 0; border: 0; min-width: 0; }
+.rayloom-device-layout-editor .rayloom-layout-preview { overflow: hidden; background: var(--rayloom-panel, #191d20); }
+.rayloom-device-layout-editor .rayloom-layout-svg { display: block; width: 100%; height: clamp(260px, 38vh, 420px); background: var(--rayloom-background, #121517); touch-action: none; user-select: none; }
+.rayloom-device-layout-editor .rayloom-layout-axes { fill: none; stroke: #47504f; stroke-width: 1; stroke-dasharray: 4 6; }
+.rayloom-device-layout-editor .rayloom-layout-led { fill: #6d838b; stroke: #b2c0c4; stroke-width: 1.3px; vector-effect: non-scaling-stroke; cursor: grab; }
+.rayloom-device-layout-editor .rayloom-layout-led[data-selected] { fill: var(--rayloom-accent, #c5e879); stroke: #eef5dd; }
+.rayloom-device-layout-editor .rayloom-layout-led:focus-visible { outline: none; stroke: white; stroke-width: 3px; }
+.rayloom-device-layout-editor .rayloom-layout-led[aria-disabled=true] { cursor: default; }

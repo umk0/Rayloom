@@ -1,0 +1,11 @@
+{
+    "Id" : "org.openrgb.openrgbvisualmapplugin",
+    "Name" : "OpenRGB Visual Map Plugin",
+    "VendorId" : "openrgb",
+    "Version" : "1.0.0",
+    "VersionStr" : "1.0",
+    "Url" : "https://gitlab.com/OpenRGBDevelopers/OpenRGBVisualMapPlugin",
+    "Commit" : "1dde279ef57df315927e3c32aa7e0ad8bf9e39f8",
+    "Description" : "Group and organize your devices on a spatial map",
+    "OpenRGBPluginAPIVersion" : 5
+}

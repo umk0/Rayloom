@@ -1,0 +1,4 @@
+import {CoreClient} from '../desktop/core-client.mjs';import fs from 'node:fs';import path from 'node:path';import os from 'node:os';import {setTimeout as delay} from 'node:timers/promises';
+const root=path.resolve(import.meta.dirname,'..'),runtime=fs.mkdtempSync(path.join(os.tmpdir(),'lumen-plugins-'));
+const client=new CoreClient(root,runtime),report={runtime,plugins:[],states:{}};
+try{await client.start();await delay(2300);report.plugins=await client.call('plugins.list');console.log(report.plugins);for(const p of report.plugins.filter(p=>p.loaded&&!p.id.includes('effects'))){try{report.states[p.id]=await client.call('plugin.rpc',{plugin:p.id,request:{method:'config.get'}});console.log(p.id,JSON.stringify(report.states[p.id]).slice(0,1800));}catch(e){console.log(p.id,e.message);report.states[p.id]={error:e.message};}}}finally{await client.stop();fs.writeFileSync(path.join(root,'artifacts/plugins-probe.json'),JSON.stringify(report,null,2));}

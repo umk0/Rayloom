@@ -1,0 +1,93 @@
+{
+  "catalog": "https://openrgb.org/plugins.html",
+  "baseRelease": "1.1",
+  "repositories": [
+    {
+      "path": "core",
+      "url": "https://gitlab.com/CalcProgrammer1/OpenRGB.git",
+      "commit": "8e16de27858cf2be6af54a33ce003df74cb9fd3e",
+      "nativePanels": 41,
+      "licenses": [
+        "core\\dependencies\\hueplusplus-1.2.0\\LICENSE",
+        "core\\LICENSE",
+        "core\\scripts\\License.rtf"
+      ]
+    },
+    {
+      "path": "plugins/e131",
+      "url": "https://gitlab.com/OpenRGBDevelopers/OpenRGBE131ReceiverPlugin.git",
+      "commit": "4900d20baba8d422a38df357c3637e77a864ec89",
+      "nativePanels": 1,
+      "licenses": []
+    },
+    {
+      "path": "plugins/effects",
+      "url": "https://gitlab.com/OpenRGBDevelopers/OpenRGBEffectsPlugin.git",
+      "commit": "f211d08afd3382318e60f829348b25c6e15fb0ae",
+      "nativePanels": 73,
+      "licenses": [
+        "plugins\\effects\\LICENSE"
+      ]
+    },
+    {
+      "path": "plugins/hardware-sync",
+      "url": "https://gitlab.com/OpenRGBDevelopers/OpenRGBHardwareSyncPlugin.git",
+      "commit": "d9994174df2e4f0b8ff0bb6729a0d9925f2121ca",
+      "nativePanels": 7,
+      "licenses": [
+        "plugins\\hardware-sync\\LICENSE"
+      ]
+    },
+    {
+      "path": "plugins/http-hook",
+      "url": "https://gitlab.com/OpenRGBDevelopers/OpenRGBHttpHookPlugin.git",
+      "commit": "4a98997188959b237639e625af415bcb640ec321",
+      "nativePanels": 4,
+      "licenses": [
+        "plugins\\http-hook\\LICENSE"
+      ]
+    },
+    {
+      "path": "plugins/scheduler",
+      "url": "https://gitlab.com/OpenRGBDevelopers/OpenRGBSchedulerPlugin.git",
+      "commit": "475d53e3b616aeb5b33faf173d827fbc11d2cfae",
+      "nativePanels": 3,
+      "licenses": [
+        "plugins\\scheduler\\LICENSE"
+      ]
+    },
+    {
+      "path": "plugins/skin",
+      "url": "https://gitlab.com/OpenRGBDevelopers/OpenRGBSkinPlugin.git",
+      "commit": "012062afa4c55bdb8a6ae05b317de037ac881994",
+      "nativePanels": 1,
+      "licenses": [
+        "plugins\\skin\\LICENSE"
+      ]
+    },
+    {
+      "path": "plugins/visual-map",
+      "url": "https://gitlab.com/OpenRGBDevelopers/OpenRGBVisualMapPlugin.git",
+      "commit": "1dde279ef57df315927e3c32aa7e0ad8bf9e39f8",
+      "nativePanels": 11,
+      "licenses": [
+        "plugins\\visual-map\\LICENSE"
+      ]
+    }
+  ],
+  "downloads": [
+    {"file":"lhwm-wrapper.dll","sha256":"b54c24aff0188b774acf41c82312a6749557836b10d99f9a4fb4cd9b332516cc"},
+    {
+      "file": "jom.zip",
+      "sha256": "d533c1ef49214229681e90196ed2094691e8c4a0a0bef0b2c901debcb562682b"
+    },
+    {
+      "file": "OpenRGBEffectsPlugin.dll",
+      "sha256": "e0c7210f3f9ca0280cdcf99c569e06bd6c6192f9bd7701597e2fcc29f06ba1ca"
+    },
+    {
+      "file": "qt-6.8.3.7z",
+      "sha256": "47b5de5a61ce1894696d5a99df5393f9213b28a84b357cc41aba970a0ad9dbbe"
+    }
+  ]
+}

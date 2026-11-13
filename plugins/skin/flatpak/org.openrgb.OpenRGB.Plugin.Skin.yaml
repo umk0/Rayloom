@@ -1,0 +1,23 @@
+id: org.openrgb.OpenRGB.Plugin.Skin
+branch: '5'
+extension-tag: org.openrgb.OpenRGB.Plugin
+build-extension: true
+separate-locales: false
+
+runtime: org.openrgb.OpenRGB
+runtime-version: 'master'
+sdk: org.kde.Sdk//6.10
+
+build-options:
+  prefix: /app/lib/openrgb/plugins/Skin
+
+modules:
+  - name: openrgb-plugin-skin
+    buildsystem: qmake
+    post-install:
+      - mv ${FLATPAK_DEST}/lib/openrgb/plugins/libOpenRGBSkinPlugin.so ${FLATPAK_DEST}/libOpenRGBSkinPlugin.so
+      - rm -rf ${FLATPAK_DEST}/lib
+      - install -Dm644 OpenRGBSkinPlugin.png ${FLATPAK_DEST}/share/icons/hicolor/512x512/apps/openrgb-skin-plugin.png
+    sources:
+      - type: dir
+        path: ../

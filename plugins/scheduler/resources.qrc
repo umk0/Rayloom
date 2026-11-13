@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>OpenRGBSchedulerPlugin.png</file>
+        <file>OpenRGBPlugins.ttf</file>
+    </qresource>
+</RCC>

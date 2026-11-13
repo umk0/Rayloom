@@ -1,0 +1,9 @@
+.ray-device-port-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,290px),1fr));gap:16px;align-items:start}
+.ray-device-name,.ray-port-heading{min-width:0;overflow-wrap:anywhere}
+.ray-port-card{min-width:0;--rayloom-layout-preview-height:160px;background:var(--mantine-color-default);border-color:var(--mantine-color-default-border)}
+.ray-port-component{min-width:0}
+.ray-port-component+.ray-port-component{padding-top:20px;border-top:1px solid var(--mantine-color-default-border)}
+.ray-port-actions{row-gap:12px}
+.ray-port-actions .mantine-Button-root{flex-grow:1}
+.ray-port-empty{min-height:190px;justify-content:center;border:1px dashed var(--mantine-color-default-border);border-radius:var(--mantine-radius-md);padding:24px 12px;color:var(--mantine-color-dimmed)}
+@media(max-width:800px){.ray-devices-screen .ray-device-list .mantine-Accordion-content{padding-right:12px;padding-left:12px}}

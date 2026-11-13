@@ -1,0 +1,11 @@
+{
+    "Id" : "org.openrgb.openrgbschedulerplugin",
+    "Name" : "OpenRGB Scheduler Plugin",
+    "VendorId" : "openrgb",
+    "Version" : "1.0.0",
+    "VersionStr" : "1.0",
+    "Url" : "https://gitlab.com/OpenRGBDevelopers/OpenRGBSchedulerPlugin",
+    "Commit" : "475d53e3b616aeb5b33faf173d827fbc11d2cfae",
+    "Description" : "Schedule some OpenRGB actions",
+    "OpenRGBPluginAPIVersion" : 5
+}

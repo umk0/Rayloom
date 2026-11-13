@@ -1,0 +1,22 @@
+{
+  "schemaVersion": 1,
+  "id": "org.rayloom.reactor",
+  "name": "Reactor • пример плагина",
+  "version": "1.0.0",
+  "author": "Rayloom",
+  "license": "GPL-2.0-or-later",
+  "effects": [{
+    "id": "reactor",
+    "name": "Реактор",
+    "description": "Пульсация по глубине Z; красный канал реагирует на здоровье игрока.",
+    "rgb": [
+      {"op":"sub","args":[1,{"var":"health"}]},
+      {"op":"mul","args":[0.5,{"op":"add","args":[1,{"op":"sin","args":[{"op":"sub","args":[{"op":"mul","args":[{"var":"z"},0.02]},{"op":"mul","args":[{"var":"t"},{"var":"speed"}]}]}]}]}]},
+      0.8
+    ]
+  }],
+  "templates": [
+    {"id":"ring-12","name":"Кольцо 12 LED · пример","kind":"ring","count":12,"radius":60},
+    {"id":"matrix-8x8","name":"Матрица 8 × 8 · пример","kind":"grid","count":64,"columns":8,"spacing":10}
+  ]
+}

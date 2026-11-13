@@ -1,0 +1,12 @@
+node_modules/
+dist/
+build-history/
+release-history/
+# Bundled binaries and the portable runtime/user-data profile are local only.
+runtime/
+downloads/
+tooling/
+artifacts/
+output/
+.playwright-cli/
+*.log

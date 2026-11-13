@@ -1,0 +1,639 @@
+/*---------------------------------------------------------*\
+| OpenRGBEffectTab.cpp                                      |
+|                                                           |
+|   OpenRGB Effects Plugin Effect Tab                       |
+|                                                           |
+|   This file is part of the OpenRGB Effects Plugin project |
+|   SPDX-License-Identifier: GPL-2.0-or-later               |
+\*---------------------------------------------------------*/
+
+#include <set>
+#include <QAction>
+#include <QComboBox>
+#include <QDialog>
+#include <QFile>
+#include <QInputDialog>
+#include <QMainWindow>
+#include <QMessageBox>
+#include <QString>
+#include <QTabBar>
+#include <QTimer>
+#include "OpenRGBEffectTab.h"
+#include "OpenRGBEffectSettings.h"
+#include "EffectListManager.h"
+#include "EffectManager.h"
+#include "OpenRGBEffectsPlugin.h"
+#include "EffectTabHeader.h"
+#include "OpenRGBEffectPage.h"
+#include "GlobalSettings.h"
+
+OpenRGBEffectTab::OpenRGBEffectTab(QWidget *parent):
+    QWidget(parent),
+    ui(new Ui::OpenRGBEffectTab)
+{
+    ui->setupUi(this);
+
+    ui->device_list->DisableControls();
+
+    effect_list = new EffectList(this);
+
+    AddGlobalMenus();
+    InitEffectTabs();
+
+    // Switch language on launch
+    SetLanguage();
+}
+
+OpenRGBEffectTab::~OpenRGBEffectTab()
+{
+    delete ui;
+}
+
+void OpenRGBEffectTab::SetLanguage()
+{
+    /*-----------------------------------------------------*\
+    | Read UserInterface settings                           |
+    \*-----------------------------------------------------*/
+    json                ui_settings         = OpenRGBEffectsPlugin::api->GetSettings("UserInterface");
+    std::string         locale              = "default";
+
+    if(ui_settings.contains("language"))
+    {
+        locale                              = ui_settings["language"];
+    }
+
+    QApplication*           app             = static_cast<QApplication *>(QApplication::instance());
+    std::string             resolved        = "";
+
+    /*-----------------------------------------------------*\
+    | Resolve the translation file used for the requested   |
+    | locale: the given locale first, then the system       |
+    | locale as a fallback                                  |
+    \*-----------------------------------------------------*/
+    if(QFile::exists(":/i18n/OpenRGB_EffectsEngine_" + QString::fromStdString(locale) + ".qm"))
+    {
+        resolved = locale;
+    }
+    else
+    {
+        QLocale system_locale(QLocale::system());
+        QLocale::setDefault(system_locale);
+
+        if(QFile::exists(":/i18n/OpenRGB_EffectsEngine_" + system_locale.name() + ".qm"))
+        {
+            resolved = system_locale.name().toStdString();
+        }
+    }
+
+    /*-----------------------------------------------------*\
+    | Return early when the translation in use did not      |
+    | change. Installing or removing a translator           |
+    | broadcasts a LanguageChange event to every widget, so |
+    | doing it needlessly makes all effect UIs retranslate  |
+    | and drop their state on any unrelated settings update |
+    \*-----------------------------------------------------*/
+    if(resolved == current_i18n_file)
+    {
+        return;
+    }
+
+    app->removeTranslator(&translator);
+
+    if(!resolved.empty() && translator.load(":/i18n/OpenRGB_EffectsEngine_" + QString::fromStdString(resolved) + ".qm"))
+    {
+        app->installTranslator(&translator);
+        LOG_DEBUG("[OpenRGBEffectTab] Changed Language to %s\n", resolved.c_str());
+    }
+
+    current_i18n_file = resolved;
+}
+
+void OpenRGBEffectTab::AddGlobalMenus()
+{
+    QAction* global_settings = new QAction(tr("Settings"), this);
+    connect(global_settings, &QAction::triggered, this, &OpenRGBEffectTab::GlobalSettingsAction);
+
+    effect_list->AddEffectsMenus();
+    effect_list->AddAction(global_settings);
+}
+
+void OpenRGBEffectTab::InitEffectTabs()
+{
+    QLabel* label = new QLabel(tr("No effects added yet.\n Please select one from the list to get started."));
+    label->setAlignment(Qt::AlignCenter);
+
+    ui->EffectTabs->insertTab(0, label , "");
+    ui->EffectTabs->setTabEnabled(0, false);
+    ui->EffectTabs->setCurrentIndex(0);
+    ui->EffectTabs->tabBar()->setTabButton(0, QTabBar::RightSide, effect_list);
+
+    connect(effect_list, &EffectList::EffectAdded, [=](RGBEffect* effect){
+        CreateEffectTab(effect);
+    });
+
+    connect(effect_list, &EffectList::ToggleAllEffectsState, [=](){
+        if(EffectManager::Get()->HasActiveEffects())
+        {
+            StopAll();
+        }
+        else
+        {
+            StartAll();
+        }
+    });
+}
+
+void OpenRGBEffectTab::CreateEffectTab(RGBEffect* effect)
+{
+    int tab_position = ui->EffectTabs->count();
+
+    EffectTabHeader* effect_header = new EffectTabHeader(ui->EffectTabs->tabBar(), effect);
+    OpenRGBEffectPage* effect_page = new OpenRGBEffectPage(this, effect);
+
+    ui->EffectTabs->insertTab(tab_position, effect_page , "");
+    ui->EffectTabs->tabBar()->setTabButton(tab_position, QTabBar::RightSide, effect_header);
+
+    connect(effect_page, &OpenRGBEffectPage::EffectState, [=](bool state){
+        effect_header->ToogleRunningIndicator(state);
+    });
+
+    connect(effect_header, &EffectTabHeader::CloseRequest, [=](){
+        int tab_idx = ui->EffectTabs->indexOf(effect_page);
+
+        ui->EffectTabs->removeTab(tab_idx);
+
+        EffectManager::Get()->SetEffectUnActive(effect);
+        EffectManager::Get()->RemoveMapping(effect);
+
+        effect_list->EnableStartStopButton(ui->EffectTabs->count() > 1);
+
+        delete effect_page;
+        delete effect_header;
+    });
+
+    connect(effect_header, &EffectTabHeader::Renamed, [=](std::string new_name){
+        effect->EffectDetails.CustomName = new_name;
+        // stupid hack to trigger resizes
+        int tab_idx = ui->EffectTabs->indexOf(effect_page);
+        ui->EffectTabs->tabBar()->setTabButton(tab_idx, QTabBar::RightSide, nullptr);
+        ui->EffectTabs->tabBar()->setTabButton(tab_idx, QTabBar::RightSide, effect_header);
+    });
+
+    connect(effect_header, &EffectTabHeader::StartStopRequest, [=](){
+        if(EffectManager::Get()->IsActive(effect))
+        {
+            effect_page->StopEffect();
+        }
+        else
+        {
+            effect_page->StartEffect();
+        }
+    });
+
+    effect_header->ToogleRunningIndicator(effect->IsAutoStart());
+
+    ui->EffectTabs->setCurrentIndex(tab_position);
+
+    effect_list->EnableStartStopButton(ui->EffectTabs->count() > 1);
+}
+
+void OpenRGBEffectTab::UpdateDeviceList()
+{
+    ui->device_list->UpdateDeviceList();
+}
+
+void OpenRGBEffectTab::SyncSelection()
+{
+    OpenRGBEffectPage* page = dynamic_cast<OpenRGBEffectPage*>(ui->EffectTabs->currentWidget());
+
+    if(page == nullptr)
+    {
+        return;
+    }
+
+    ui->device_list->ApplySelection(EffectManager::Get()->GetAssignedZones(page->GetEffect()));
+}
+
+void OpenRGBEffectTab::on_EffectTabs_currentChanged(int current)
+{
+    if(current > 0)
+    {
+        QWidget* widget = ui->EffectTabs->currentWidget();
+        RGBEffect* effect = ((OpenRGBEffectPage*)widget)->GetEffect();
+
+        ui->device_list->EnableControls();
+        ui->device_list->ApplySelection(EffectManager::Get()->GetAssignedZones(effect));
+    }
+    else
+    {
+        ui->device_list->DisableControls();
+        ui->device_list->ApplySelection({});
+    }
+}
+
+void OpenRGBEffectTab::on_device_list_SelectionChanged()
+{
+    QWidget* widget = ui->EffectTabs->currentWidget();
+
+    if(dynamic_cast<OpenRGBEffectPage*>(widget) == nullptr)
+    {
+        return;
+    }
+
+    RGBEffect* effect = ((OpenRGBEffectPage*)widget)->GetEffect();
+
+    EffectManager::Get()->Assign(ui->device_list->GetSelection(), effect);
+}
+
+void OpenRGBEffectTab::GlobalSettingsAction()
+{
+    QDialog dialog;
+    dialog.setWindowTitle("Global settings");
+    dialog.setModal(true);
+
+    QVBoxLayout dialog_layout(&dialog);
+
+    GlobalSettings global_settings(&dialog);
+
+    dialog_layout.addWidget(&global_settings);
+
+    dialog.exec();
+}
+
+json OpenRGBEffectTab::GetProfileJson(bool save_effects_state)
+{
+    std::map<RGBEffect*, std::vector<ControllerZone*>> effect_zones = EffectManager::Get()->GetEffectsMapping();
+    std::map<RGBEffect*, std::vector<ControllerZone*>>::iterator it;
+
+    json settings;
+
+    settings["version"] = OpenRGBEffectSettings::version;
+
+    std::vector<json> effects_settings;
+
+    QList<OpenRGBEffectPage*> pages;
+
+    for(int i = 1; i < ui->EffectTabs->count(); i++)
+    {
+        pages.push_back(dynamic_cast<OpenRGBEffectPage*>(ui->EffectTabs->widget(i)));
+    }
+
+    for(OpenRGBEffectPage* page: pages)
+    {
+        RGBEffect* effect = page->GetEffect();
+        std::vector<ControllerZone*> controller_zones = effect_zones[effect];
+
+        json effect_settings = effect->ToJson();
+
+        effect_settings["AutoStart"] = save_effects_state ? EffectManager::Get()->IsActive(effect) : false;
+
+        std::vector<json> zones;
+
+        /*-------------------------------------------------*\
+        | Save live zones plus unresolved descriptors, so   |
+        | an assignment whose device is absent at save time |
+        | is kept and rebinds when the device returns. Only |
+        | a profile load or an explicit deselection drops   |
+        | an assignment.                                    |
+        \*-------------------------------------------------*/
+        for(ControllerZone* controller_zone: controller_zones)
+        {
+            zones.push_back(controller_zone->to_json());
+        }
+
+        for(const json& zone_json: EffectManager::Get()->GetUnresolvedZones(effect))
+        {
+            zones.push_back(zone_json);
+        }
+
+        effect_settings["ControllerZones"] = zones;
+
+        effect_settings["SelectAll"] = ui->device_list->GetSelectAll();
+        
+        effects_settings.push_back(effect_settings);
+    }
+
+    settings["Effects"] = effects_settings;
+
+    return(settings);
+}
+
+void OpenRGBEffectTab::AboutToLoadProfile()
+{
+    StopAll();
+    ClearAll();
+}
+
+void OpenRGBEffectTab::LoadProfileJson(json profile_json)
+{
+    StopAll();
+    ClearAll();
+
+    if(!profile_json.contains("version") || profile_json["version"] != OpenRGBEffectSettings::version)
+    {
+        LOG_WARNING("[OpenRGBEffectsPlugin] Trying to load an old settings file version. Aborting.");
+        return;
+    }
+
+    json effects_settings = profile_json["Effects"];
+
+    for(json effect_settings : effects_settings)
+    {
+        try
+        {
+            LoadEffect(effect_settings);
+        }
+        catch (const std::exception& e)
+        {
+            LOG_WARNING("[OpenRGBEffectsPlugin] Something went wrong while loading effect: %s.", e.what());
+        }
+        catch(...)
+        {
+            LOG_WARNING("[OpenRGBEffectsPlugin] Unknown error while loading effect.");
+        }
+    }
+}
+
+void OpenRGBEffectTab::LoadEffect(json effect_settings)
+{
+    std::string name = effect_settings["EffectClassName"];
+
+    std::vector<RGBColor> colors;
+
+    for(unsigned int color : effect_settings["UserColors"])
+    {
+        colors.push_back(color);
+    }
+
+    std::vector<ControllerZone*>    saved_zones;
+    std::vector<json>               unresolved_zones;
+
+    json zones = effect_settings["ControllerZones"];
+
+    LOG_VERBOSE("[OpenRGBEffectsPlugin] Looking for corresponding controllers for auto assignment...");
+
+    /*-----------------------------------------------------*\
+    | Claim each zone once so identical devices stay        |
+    | distinct                                              |
+    \*-----------------------------------------------------*/
+    std::set<ControllerZone*> claimed;
+
+    OpenRGBEffectsPlugin::controller_zones_mutex.lock_shared();
+
+    for(const json& zone_json : zones)
+    {
+        ControllerZone* matched_zone = nullptr;
+
+        for(ControllerZone* controller_zone: OpenRGBEffectsPlugin::controller_zones)
+        {
+            if(claimed.find(controller_zone) == claimed.end() && controller_zone->matches_json(zone_json))
+            {
+                controller_zone->reverse            = zone_json.contains("reverse")         ? (bool)zone_json["reverse"]                    : false;
+                controller_zone->self_brightness    = zone_json.contains("self_brightness") ? (unsigned int)zone_json["self_brightness"]    : 100;
+
+                claimed.insert(controller_zone);
+
+                matched_zone = controller_zone;
+                break;
+            }
+        }
+
+        /*-------------------------------------------------*\
+        | Device not present yet; keep the descriptor to    |
+        | resolve on a later controller-list update         |
+        \*-------------------------------------------------*/
+        if(matched_zone != nullptr)
+        {
+            saved_zones.push_back(matched_zone);
+        }
+        else
+        {
+            unresolved_zones.push_back(zone_json);
+        }
+    }
+
+    OpenRGBEffectsPlugin::controller_zones_mutex.unlock_shared();
+
+    if(!unresolved_zones.empty())
+    {
+        LOG_VERBOSE("[OpenRGBEffectsPlugin] %lu of %lu saved zones are not available yet, waiting for them to appear",
+                    unresolved_zones.size(), zones.size());
+    }
+
+    LOG_VERBOSE("[OpenRGBEffectsPlugin] Creating effect: %s", name.c_str());
+
+    RGBEffect* effect = EffectListManager::get()->GetEffectConstructor(name)();
+
+    LOG_VERBOSE("[OpenRGBEffectsPlugin] Effect %s: Applying basic settings", name.c_str());
+
+    bool auto_start = effect_settings["AutoStart"];
+
+    effect->SetFPS(effect_settings["FPS"]);
+    effect->SetAutoStart(false);
+    effect->SetUserColors(colors);
+    effect->SetSpeed(effect_settings["Speed"]);
+    effect->SetSlider2Val(effect_settings["Slider2Val"]);
+    effect->SetRandomColorsEnabled(effect_settings["RandomColors"]);
+    effect->SetOnlyFirstColorEnabled(effect_settings["AllowOnlyFirst"]);
+
+    if(effect_settings.contains("CustomName"))
+    {
+        effect->EffectDetails.CustomName = effect_settings["CustomName"];
+    }
+
+    if(effect_settings.contains("Brightness"))
+    {
+        effect->SetBrightness(effect_settings["Brightness"]);
+    }
+    else
+    {
+        effect->SetBrightness(100);
+    }
+
+    if(effect_settings.contains("Temperature"))
+    {
+        effect->SetTemperature(effect_settings["Temperature"]);
+    }
+    else
+    {
+        effect->SetTemperature(0);
+    }
+
+    if(effect_settings.contains("Tint"))
+    {
+        effect->SetTint(effect_settings["Tint"]);
+    }
+    else
+    {
+        effect->SetTint(0);
+    }
+
+    LOG_VERBOSE("[OpenRGBEffectsPlugin] Effect %s: Loading custom settings", name.c_str());
+
+    if(effect_settings.contains("CustomSettings"))
+    {
+        effect->LoadCustomSettings(effect_settings["CustomSettings"]);
+    }
+
+    LOG_VERBOSE("[OpenRGBEffectsPlugin] Creating effect %s tab", name.c_str());
+
+    CreateEffectTab(effect);
+
+
+    if(effect_settings.contains("SelectAll") && (effect_settings["SelectAll"] == true))
+    {
+        ui->device_list->SetSelectAll(true);
+    }
+    else
+    {
+        ui->device_list->SetSelectAll(false);
+
+        EffectManager::Get()->Assign(saved_zones, effect);
+        EffectManager::Get()->SetUnresolvedZones(effect, unresolved_zones);
+        ui->device_list->ApplySelection(saved_zones);
+    }
+
+    if(auto_start)
+    {
+        effect->SetAutoStart(true);
+        dynamic_cast<OpenRGBEffectPage*>(ui->EffectTabs->widget(ui->EffectTabs->count() - 1))->StartEffect();
+    }
+}
+
+void OpenRGBEffectTab::StartAll()
+{
+    for(int i = 1; i < ui->EffectTabs->count(); i++)
+    {
+        (dynamic_cast<OpenRGBEffectPage*>(ui->EffectTabs->widget(i)))->StartEffect();
+    }
+}
+
+void OpenRGBEffectTab::StopAll()
+{
+    for(int i = 1; i < ui->EffectTabs->count(); i++)
+    {
+        (dynamic_cast<OpenRGBEffectPage*>(ui->EffectTabs->widget(i)))->StopEffect();
+    }
+}
+
+void OpenRGBEffectTab::ClearAll()
+{
+    while(ui->EffectTabs->count() > 1)
+    {
+        int idx = ui->EffectTabs->count() - 1;
+
+        OpenRGBEffectPage* effect_page = dynamic_cast<OpenRGBEffectPage*>(ui->EffectTabs->widget(idx));
+        EffectTabHeader* effect_header = dynamic_cast<EffectTabHeader*>(ui->EffectTabs->tabBar()->tabButton(idx, QTabBar::RightSide));
+
+        ui->EffectTabs->removeTab(idx);
+
+        delete effect_page;
+        delete effect_header;
+    }
+
+    effect_list->EnableStartStopButton(false);
+
+    EffectManager::Get()->ClearAssignments();
+}
+
+void OpenRGBEffectTab::OnStopEffects()
+{
+    StopAll();
+}
+
+void OpenRGBEffectTab::SetEffectState(std::string name, bool running)
+{
+    QList<OpenRGBEffectPage*> pages = ui->EffectTabs->findChildren<OpenRGBEffectPage*>();
+
+    for(OpenRGBEffectPage* page: pages)
+    {
+        if (page->GetEffect()->EffectDetails.EffectName == name)
+        {
+            if (running)
+            {
+                page->StartEffect();
+            } else {
+                page->StopEffect();
+            }
+            break;
+        }
+    }
+}
+
+unsigned char * OpenRGBEffectTab::GetEffectListDescription(unsigned int* data_size)
+{
+    std::vector<RGBEffect*> registered_effects;
+    QList<OpenRGBEffectPage*> pages = ui->EffectTabs->findChildren<OpenRGBEffectPage*>();
+
+    for(OpenRGBEffectPage* page: pages)
+    {
+        registered_effects.push_back(page->GetEffect());
+    }
+    unsigned int data_ptr = 0;
+    unsigned short num_effects = registered_effects.size();
+
+    *data_size += sizeof(unsigned int);
+    *data_size += sizeof(num_effects);
+
+    for (unsigned int i = 0; i < num_effects; i++)
+    {
+        *data_size += sizeof(unsigned short);
+        *data_size += strlen(registered_effects[i]->EffectDetails.EffectName.c_str()) + 1;
+
+        *data_size += sizeof(unsigned short);
+        *data_size += strlen(registered_effects[i]->EffectDetails.EffectDescription.c_str()) + 1;
+
+        *data_size += sizeof(bool);
+    }
+
+    /*---------------------------------------------------------*\
+    | Create data buffer                                        |
+    \*---------------------------------------------------------*/
+    unsigned char *data_buf = new unsigned char[*data_size];
+
+    /*---------------------------------------------------------*\
+    | Copy in data size                                         |
+    \*---------------------------------------------------------*/
+    memcpy(data_buf, data_size, sizeof(*data_size));
+    data_ptr += sizeof(*data_size);
+
+    /*---------------------------------------------------------*\
+    | Copy in num_effects                                       |
+    \*---------------------------------------------------------*/
+    memcpy(&data_buf[data_ptr], &num_effects, sizeof(num_effects));
+    data_ptr += sizeof(num_effects);
+
+    for (unsigned int i = 0; i < num_effects; i++)
+    {
+        /*---------------------------------------------------------*\
+        | Copy in effect name (size+data)                           |
+        \*---------------------------------------------------------*/
+        unsigned short str_len = strlen(registered_effects[i]->EffectDetails.EffectName.c_str()) + 1;
+
+        memcpy(&data_buf[data_ptr], &str_len, sizeof(unsigned short));
+        data_ptr += sizeof(unsigned short);
+
+        strcpy((char *)&data_buf[data_ptr], registered_effects[i]->EffectDetails.EffectName.c_str());
+        data_ptr += str_len;
+
+        /*---------------------------------------------------------*\
+        | Copy in effect description (size+data)                    |
+        \*---------------------------------------------------------*/
+        str_len = strlen(registered_effects[i]->EffectDetails.EffectDescription.c_str()) + 1;
+
+        memcpy(&data_buf[data_ptr], &str_len, sizeof(unsigned short));
+        data_ptr += sizeof(unsigned short);
+
+        strcpy((char *)&data_buf[data_ptr], registered_effects[i]->EffectDetails.EffectDescription.c_str());
+        data_ptr += str_len;
+
+        /*---------------------------------------------------------*\
+        | Copy whether effect is enabled (data)                     |
+        \*---------------------------------------------------------*/
+        bool enabled = registered_effects[i]->IsEnabled();
+        memcpy(&data_buf[data_ptr], &enabled, sizeof(bool));
+        data_ptr += sizeof(bool);
+    }
+
+    return(data_buf);
+}

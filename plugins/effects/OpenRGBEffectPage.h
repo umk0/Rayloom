@@ -1,0 +1,77 @@
+/*---------------------------------------------------------*\
+| OpenRGBEffectPage.h                                       |
+|                                                           |
+|   OpenRGB Effects Plugin Effect Page Widget               |
+|                                                           |
+|   This file is part of the OpenRGB Effects Plugin project |
+|   SPDX-License-Identifier: GPL-2.0-or-later               |
+\*---------------------------------------------------------*/
+
+#pragma once
+
+#include "ui_OpenRGBEffectPage.h"
+
+#include "RGBEffect.h"
+#include "ColorPicker.h"
+
+namespace Ui
+{
+    class OpenRGBEffectPage;
+}
+
+class OpenRGBEffectPage : public QWidget
+{
+    Q_OBJECT
+
+public:
+    explicit OpenRGBEffectPage(QWidget *parent = nullptr, RGBEffect* EFCT = nullptr);
+    ~OpenRGBEffectPage();
+
+    void CreateDeviceSelection(std::string DeviceName);
+
+    RGBEffect* GetEffect();
+
+    void StartEffect();
+    void StopEffect();
+    void SetPreviewButtonVisible(bool);
+    void SetFPSSliderVisible(bool);
+
+signals:
+    void EffectState(bool);
+
+private slots:
+    void changeEvent(QEvent *event) override;
+    void on_preview_clicked();
+    void on_SpeedSlider_valueChanged(int value);
+    void on_Slider2_valueChanged(int value);
+    void on_FPS_slider_valueChanged(int value);
+    void on_Brightness_slider_valueChanged(int value);
+    void on_RandomCheckbox_clicked();
+    void on_OnlyFirst_clicked();
+    void on_toggle_info_clicked();
+    void on_Temperature_valueChanged(int value);
+    void on_Tint_valueChanged(int value);
+
+    void SavePatternAction();
+    void LoadPatternAction();
+    void EditPatternAction();
+    void OpenPatternsFolder();
+
+private:
+    Ui::OpenRGBEffectPage*                  ui;
+    QHBoxLayout*                            colors_layout = nullptr;
+    std::vector<ColorPicker*>               ColorPickers;
+    RGBEffect*                              effect;
+    bool                                    info_visible = false;
+    std::vector<RGBControllerInterface*>    OwnedController;
+    QDialog*                                preview_dialog;
+    ControllerZone*                         preview_zone;
+    bool                                    RandomColors = false;
+    std::vector<RGBColor>                   UserColors;
+
+    void ApplyJson(json);
+    void InitUi();
+    void OpenPreview();
+    void ToggleInfo();
+    json ToJson();
+};

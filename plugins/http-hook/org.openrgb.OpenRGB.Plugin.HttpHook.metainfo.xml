@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2026 Adam Honse, OpenRGB Team -->
+<component type="addon">
+  <id>org.openrgb.OpenRGB.Plugin.HttpHook</id>
+  <extends>org.openrgb.OpenRGB</extends>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-2.0-or-later</project_license>
+  <developer id="org.openrgb">
+    <name>Adam Honse, OpenRGB Team</name>
+  </developer>
+
+  <name>OpenRGB HTTP Hook Plugin</name>
+  <icon type="stock">openrgb-scheduler-http-hook</icon>
+
+  <content_rating type="oars-1.0" />
+
+  <summary>HTTP Hook plugin for OpenRGB that allows OpenRGB profile changes via HTTP POST/GET</summary>
+
+  <description>
+    <p>
+      The OpenRGB HTTP Hook Plugin is a plugin for OpenRGB that can trigger
+      actions including profile changes from HTTP requests.
+    </p><p>
+      Features
+    </p>
+    <ul>
+      <li>Trigger profile changes</li>
+      <li>Supports both HTTP POST and GET</li>
+    </ul>
+  </description>
+
+  <releases>
+    <release version="1.0" date="2026-09-11"></release>
+    <release version="1.0~rc2" date="2025-09-14" type="development"></release>
+    <release version="0.9" date="2023-07-11"></release>
+    <release version="0.8" date="2022-12-03"></release>
+  </releases>
+
+  <screenshots>
+    <screenshot type="default">
+      <image>https://gitlab.com/OpenRGBDevelopers/OpenRGBHttpHookPlugin/-/raw/master/Documentation/Images/Screenshot.png</image>
+      <caption>OpenRGB Scheduler Plugin</caption>
+    </screenshot>
+  </screenshots>
+
+  <keywords>
+    <keyword>rgb</keyword>
+    <keyword>schedule</keyword>
+    <keyword>lighting</keyword>
+    <keyword>plugin</keyword>
+  </keywords>
+
+  <url type="bugtracker">https://gitlab.com/OpenRGBDevelopers/OpenRGBHttpHookPlugin/-/issues</url>
+  <url type="donation">https://gitlab.com/CalcProgrammer1/OpenRGB/-/blob/master/README.md#support-openrgb</url>
+  <url type="help">https://gitlab.com/OpenRGBDevelopers/OpenRGBHttpHookPlugin/-/blob/master/README.md</url>
+  <url type="homepage">https://openrgb.org/plugin_http_hook.html</url>
+</component>

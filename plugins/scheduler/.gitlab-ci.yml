@@ -1,0 +1,505 @@
+#-----------------------------------------------------------#
+# .gitlab-ci.yml                                            #
+#                                                           #
+#   OpenRGB Scheduler Plugin GitLab CI Configuration        #
+#                                                           #
+#   This file is part of the OpenRGB Scheduler Plugin       #
+#   project                                                 #
+#   SPDX-License-Identifier: GPL-2.0-or-later               #
+#-----------------------------------------------------------#
+
+#-----------------------------------------------------------#
+# GitLab CI Rules                                           #
+#                                                           #
+# * For downstream forks (not on OpenRGBDevelopers/         #
+#   OpenRGBSchedulerPlugin), run only if manually started   #
+#   to save CI minutes if GitLab hosted runners             #
+# * For commits to the OpenRGBDevelopers/                   #
+#   OpenRGBSchedulerPlugin repository, automatically run    #
+#   all jobs on the default branch, otherwise run them if   #
+#   the source is part of a merge request                   #
+#-----------------------------------------------------------#
+.downstream_rules:
+  rules:
+  - if: $CI_PROJECT_PATH != "OpenRGBDevelopers/OpenRGBSchedulerPlugin" && $CI_PIPELINE_SOURCE == "push"
+    when: manual
+    allow_failure: true
+
+.upstream_rules:
+  rules:
+  - if: '$CI_PROJECT_PATH == "OpenRGBDevelopers/OpenRGBSchedulerPlugin" && ($CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH || $CI_PIPELINE_SOURCE == "merge_request_event")'
+    when: on_success
+  - !reference [.downstream_rules, rules]
+
+.shared_windows_runners:
+  tags:
+  - shared-windows
+  - windows
+  - windows-1809
+
+stages:
+  - build
+  - deploy
+
+variables:
+  GIT_SUBMODULE_STRATEGY: recursive
+  GIT_DEPTH: 0
+
+before_script:
+ - echo "started by ${GITLAB_USER_NAME}"
+
+ #reusable templates
+.ccache_init: &ccache_init
+  before_script:
+    - export APPIMAGE_EXTRACT_AND_RUN=1
+
+#-----------------------------------------------------------#
+# Common Linux Build Steps                                  #
+#-----------------------------------------------------------#
+.hidden_linux_script: &linux_script_steps
+  image: registry.gitlab.com/openrgbdevelopers/openrgb-linux-ci-deb-builder:trixie-${TGT_ARCH}
+  tags:
+  - linux
+  - ${TGT_ARCH}
+  stage: build
+  script:
+  - export $(dpkg-architecture)
+  - ./scripts/build-plugin.sh ${TGT_QT}
+
+  artifacts:
+    name: "${CI_PROJECT_NAME}_Linux_${TGT_NAME}_${CI_COMMIT_SHORT_SHA}"
+    paths:
+    - ./libOpenRGBSchedulerPlugin.so
+    expire_in: 30 days
+
+  rules:
+    - !reference [.upstream_rules, rules]
+  
+#-----------------------------------------------------------#
+# Linux i386 Qt5 Build Target                               #
+#-----------------------------------------------------------#
+"Linux i386 Qt5":
+  variables:
+    TGT_ARCH: "i386"
+    TGT_QT: "qt5"
+    TGT_NAME: "${TGT_ARCH}_qt5"
+    TGT_PATH: "${TGT_ARCH}"
+  <<: *linux_script_steps
+
+#-----------------------------------------------------------#
+# Linux i386 Build Target                                   #
+#-----------------------------------------------------------#
+"Linux i386":
+  variables:
+    TGT_ARCH: "i386"
+    TGT_QT: "qt6"
+    TGT_NAME: "${TGT_ARCH}"
+    TGT_PATH: "${TGT_ARCH}"
+  <<: *linux_script_steps
+
+#-----------------------------------------------------------#
+# Linux amd64 Qt5 Build Target                              #
+#-----------------------------------------------------------#
+"Linux amd64 Qt5":
+  variables:
+    TGT_ARCH: "amd64"
+    TGT_QT: "qt5"
+    TGT_NAME: "${TGT_ARCH}_qt5"
+    TGT_PATH: "${TGT_ARCH}"
+  <<: *linux_script_steps
+
+#-----------------------------------------------------------#
+# Linux amd64 Build Target                                  #
+#-----------------------------------------------------------#
+"Linux amd64":
+  variables:
+    TGT_ARCH: "amd64"
+    TGT_QT: "qt6"
+    TGT_NAME: "${TGT_ARCH}"
+    TGT_PATH: "${TGT_ARCH}"
+  <<: *linux_script_steps
+
+#-----------------------------------------------------------#
+# Linux armhf Qt5 Build Target                              #
+#-----------------------------------------------------------#
+"Linux armhf Qt5":
+  variables:
+    TGT_ARCH: "armhf"
+    TGT_QT: "qt5"
+    TGT_NAME: "${TGT_ARCH}_qt5"
+    TGT_PATH: "${TGT_ARCH}"
+  <<: *linux_script_steps
+
+#-----------------------------------------------------------#
+# Linux armhf Build Target                                  #
+#-----------------------------------------------------------#
+"Linux armhf":
+  variables:
+    TGT_ARCH: "armhf"
+    TGT_QT: "qt6"
+    TGT_NAME: "${TGT_ARCH}"
+    TGT_PATH: "${TGT_ARCH}"
+  <<: *linux_script_steps
+
+#-----------------------------------------------------------#
+# Linux arm64 Qt5 Build Target                              #
+#-----------------------------------------------------------#
+"Linux arm64 Qt5":
+  variables:
+    TGT_ARCH: "arm64"
+    TGT_QT: "qt5"
+    TGT_NAME: "${TGT_ARCH}_qt5"
+    TGT_PATH: "${TGT_ARCH}"
+  <<: *linux_script_steps
+
+#-----------------------------------------------------------#
+# Linux arm64 Build Target                                  #
+#-----------------------------------------------------------#
+"Linux arm64":
+  variables:
+    TGT_ARCH: "arm64"
+    TGT_QT: "qt6"
+    TGT_NAME: "${TGT_ARCH}"
+    TGT_PATH: "${TGT_ARCH}"
+  <<: *linux_script_steps
+
+#-----------------------------------------------------------#
+# Common Debian Build Steps                                 #
+#-----------------------------------------------------------#
+.hidden_deb_script: &debian_script_steps
+  <<: *ccache_init
+  image: registry.gitlab.com/openrgbdevelopers/openrgb-linux-ci-deb-builder:$TGT_DEB-$TGT_ARCH
+  tags:
+  - linux
+  - $TGT_ARCH
+  stage: build
+  script:
+  - ./scripts/build-package-files.sh debian/changelog
+  - dpkg-architecture -l
+  - dpkg-buildpackage -us -B
+  - rm -v ../openrgb-plugin-scheduler-dbgsym*.deb
+  - mv -v ../openrgb-plugin-scheduler*.deb ./
+
+  artifacts:
+    name: "${CI_PROJECT_NAME}_Linux_${TGT_ARCH}_deb_${CI_COMMIT_SHORT_SHA}"
+    paths:
+    - openrgb-plugin-scheduler*.deb
+    exclude:
+    - openrgb-plugin-scheduler-dbgsym*.deb
+    expire_in: 30 days
+
+  rules:
+    - !reference [.upstream_rules, rules]
+
+#-----------------------------------------------------------#
+# Linux (.deb) Debian Bookworm i386 Build Target            #
+#-----------------------------------------------------------#
+"Linux i386 .deb (Debian Bookworm)":
+  variables:
+    TGT_ARCH: "i386"
+    TGT_DEB: "bookworm"
+  <<: *debian_script_steps
+
+#-----------------------------------------------------------#
+# Linux (.deb) Debian Trixie i386 Build Target              #
+#-----------------------------------------------------------#
+"Linux i386 .deb (Debian Trixie)":
+  variables:
+    TGT_ARCH: "i386"
+    TGT_DEB: "trixie"
+  <<: *debian_script_steps
+
+#-----------------------------------------------------------#
+# Linux (.deb) Debian Bookworm amd64 Build Target           #
+#-----------------------------------------------------------#
+"Linux amd64 .deb (Debian Bookworm)":
+  variables:
+    TGT_ARCH: "amd64"
+    TGT_DEB: "bookworm"
+  <<: *debian_script_steps
+
+#-----------------------------------------------------------#
+# Linux (.deb) Debian Trixie amd64 Build Target             #
+#-----------------------------------------------------------#
+"Linux amd64 .deb (Debian Trixie)":
+  variables:
+    TGT_ARCH: "amd64"
+    TGT_DEB: "trixie"
+  <<: *debian_script_steps
+
+#-----------------------------------------------------------#
+# Linux (.deb) Debian Bookworm armhf Build Target           #
+#-----------------------------------------------------------#
+"Linux armhf .deb (Debian Bookworm)":
+  variables:
+    TGT_ARCH: "armhf"
+    TGT_DEB: "bookworm"
+  <<: *debian_script_steps
+
+#-----------------------------------------------------------#
+# Linux (.deb) Debian Trixie armhf Build Target             #
+#-----------------------------------------------------------#
+"Linux armhf .deb (Debian Trixie)":
+  variables:
+    TGT_ARCH: "armhf"
+    TGT_DEB: "trixie"
+  <<: *debian_script_steps
+
+#-----------------------------------------------------------#
+# Linux (.deb) Debian Bookworm arm64 Build Target           #
+#-----------------------------------------------------------#
+"Linux arm64 .deb (Debian Bookworm)":
+  variables:
+    TGT_ARCH: "arm64"
+    TGT_DEB: "bookworm"
+  <<: *debian_script_steps
+
+#-----------------------------------------------------------#
+# Linux (.deb) Debian Trixie arm64 Build Target             #
+#-----------------------------------------------------------#
+"Linux arm64 .deb (Debian Trixie)":
+  variables:
+    TGT_ARCH: "arm64"
+    TGT_DEB: "trixie"
+  <<: *debian_script_steps
+
+#-----------------------------------------------------------#
+# Linux (.rpm) Fedora 44 amd64 Build Target                 #
+#-----------------------------------------------------------#
+"Linux amd64 .rpm (Fedora 44)":
+  image: fedora:44
+  stage: build
+  script:
+  - dnf install rpmdevtools dnf-plugins-core libcurl-devel qt6-qtbase-devel git wget -y
+  - rpmdev-setuptree
+  - ./scripts/build-package-files.sh fedora/OpenRGBSchedulerPlugin.spec
+  - cp fedora/OpenRGBSchedulerPlugin.spec /root/rpmbuild/SPECS
+  - cp -rp . /root/rpmbuild/SOURCES/OpenRGBSchedulerPlugin
+  - cd /root/rpmbuild
+  - dnf builddep SPECS/OpenRGBSchedulerPlugin.spec -y
+  - rpmbuild -ba SPECS/OpenRGBSchedulerPlugin.spec
+  - cd RPMS/x86_64/
+  - mv openrgb*.rpm ${CI_PROJECT_DIR}/
+  - cd ${CI_PROJECT_DIR}
+
+  artifacts:
+    name: "${CI_PROJECT_NAME}_Linux_amd64_rpm_${CI_COMMIT_SHORT_SHA}"
+    paths:
+    - openrgb-plugin-scheduler*.rpm
+    expire_in: 30 days
+
+  rules:
+    - !reference [.upstream_rules, rules]
+
+#-----------------------------------------------------------#
+# Common Flatpak Build Steps                                #
+#-----------------------------------------------------------#
+.hidden_flatpak_script: &flatpak_script_steps
+  image: ghcr.io/flathub-infra/flatpak-github-actions:kde-6.10
+  stage: build
+  tags:
+  - linux
+  - ${TGT_ARCH}
+  before_script:
+  - curl --location --output artifacts.zip ${TGT_UPSTREAM_URL}
+  - unzip artifacts.zip
+  - flatpak install --user --assumeyes org.openrgb.OpenRGB.flatpak
+  script:
+  - flatpak-builder --user --disable-rofiles-fuse --repo=build/repo build/flatpak-build flatpak/org.openrgb.OpenRGB.Plugin.Scheduler.yaml
+  - flatpak build-bundle --runtime build/repo org.openrgb.OpenRGB.Plugin.Scheduler.flatpak org.openrgb.OpenRGB.Plugin.Scheduler 5
+
+  artifacts:
+    name: "${CI_PROJECT_NAME}_Linux_${TGT_ARCH}_Flatpak_${CI_COMMIT_SHORT_SHA}"
+    paths:
+    - org.openrgb.OpenRGB.Plugin.Scheduler.flatpak
+    expire_in: 30 days
+
+  rules:
+    - !reference [.upstream_rules, rules]
+
+#-----------------------------------------------------------#
+# Linux Flatpak amd64 Build Target                          #
+#-----------------------------------------------------------#
+"Linux amd64 Flatpak":
+  variables:
+    TGT_UPSTREAM_URL: "https://gitlab.com/CalcProgrammer1/OpenRGB/-/jobs/artifacts/master/download?job=Linux+amd64+Flatpak"
+    TGT_ARCH: "amd64"
+  <<: *flatpak_script_steps
+
+#-----------------------------------------------------------#
+# Linux Flatpak arm64 Build Target                          #
+#-----------------------------------------------------------#
+"Linux arm64 Flatpak":
+  variables:
+    TGT_UPSTREAM_URL: "https://gitlab.com/CalcProgrammer1/OpenRGB/-/jobs/artifacts/master/download?job=Linux+arm64+Flatpak"
+    TGT_ARCH: "arm64"
+  <<: *flatpak_script_steps
+
+#-----------------------------------------------------------#
+# Windows (32-bit) Qt5 Build Target                         #
+#-----------------------------------------------------------#
+"Windows 32 Qt5":
+  extends:
+  - .shared_windows_runners
+  stage: build
+  script:
+  - scripts\build-windows.bat 5.15.0 2019 32
+  - mv "OpenRGBSchedulerPlugin Windows 32-Bit\OpenRGBSchedulerPlugin.dll" .
+  artifacts:
+    name: "${CI_PROJECT_NAME}_Windows_32_${CI_COMMIT_SHORT_SHA}"
+    paths:
+    - OpenRGBSchedulerPlugin.dll
+    expire_in: 30 days
+
+  rules:
+    - !reference [.upstream_rules, rules]
+
+#-----------------------------------------------------------#
+# Windows (32-bit) Build Target                             #
+#-----------------------------------------------------------#
+"Windows 32":
+  extends:
+  - .shared_windows_runners
+  stage: build
+  script:
+  - scripts\build-windows.bat 6.8.3 2022 32
+  - mv "OpenRGBSchedulerPlugin Windows 32-Bit\OpenRGBSchedulerPlugin.dll" .
+  artifacts:
+    name: "${CI_PROJECT_NAME}_Windows_32_${CI_COMMIT_SHORT_SHA}"
+    paths:
+    - OpenRGBSchedulerPlugin.dll
+    expire_in: 30 days
+
+  rules:
+    - !reference [.upstream_rules, rules]
+
+#-----------------------------------------------------------#
+# Windows (64-bit) Qt5 Build Target                         #
+#-----------------------------------------------------------#
+"Windows 64 Qt5":
+  extends:
+  - .shared_windows_runners
+  stage: build
+  script:
+  - scripts\build-windows.bat 5.15.0 2019 64
+  - mv "OpenRGBSchedulerPlugin Windows 64-Bit\OpenRGBSchedulerPlugin.dll" .
+  artifacts:
+    name: "${CI_PROJECT_NAME}_Windows_64_${CI_COMMIT_SHORT_SHA}"
+    paths:
+    - OpenRGBSchedulerPlugin.dll
+    expire_in: 30 days
+
+  rules:
+    - !reference [.upstream_rules, rules]
+
+#-----------------------------------------------------------#
+# Windows (64-bit) Build Target                             #
+#-----------------------------------------------------------#
+"Windows 64":
+  extends:
+  - .shared_windows_runners
+  stage: build
+  script:
+  - scripts\build-windows.bat 6.8.3 2022 64
+  - mv "OpenRGBSchedulerPlugin Windows 64-Bit\OpenRGBSchedulerPlugin.dll" .
+  artifacts:
+    name: "${CI_PROJECT_NAME}_Windows_64_${CI_COMMIT_SHORT_SHA}"
+    paths:
+    - OpenRGBSchedulerPlugin.dll
+    expire_in: 30 days
+
+  rules:
+    - !reference [.upstream_rules, rules]
+
+#-----------------------------------------------------------#
+# MacOS Build Target                                        #
+#-----------------------------------------------------------#
+"MacOS ARM64 Qt5":
+  tags:
+  - macos
+  stage: build
+  script:
+  - ./scripts/build-macos.sh qt5 arm
+
+  artifacts:
+    name: "${CI_PROJECT_NAME}_MacOS_ARM64_Qt5_${CI_COMMIT_SHORT_SHA}"
+    paths:
+    - libOpenRGBSchedulerPlugin.dylib
+    expire_in: 30 days
+
+  rules:
+    - !reference [.upstream_rules, rules]
+
+"MacOS ARM64":
+  tags:
+  - macos
+  stage: build
+  script:
+  - ./scripts/build-macos.sh qt6 arm
+
+  artifacts:
+    name: "${CI_PROJECT_NAME}_MacOS_ARM64_${CI_COMMIT_SHORT_SHA}"
+    paths:
+    - libOpenRGBSchedulerPlugin.dylib
+    expire_in: 30 days
+
+  rules:
+    - !reference [.upstream_rules, rules]
+
+"MacOS Intel Qt5":
+  tags:
+  - macos
+  stage: build
+  script:
+  - ./scripts/build-macos.sh qt5 intel
+
+  artifacts:
+    name: "${CI_PROJECT_NAME}_MacOS_Intel_Qt5_${CI_COMMIT_SHORT_SHA}"
+    paths:
+    - libOpenRGBSchedulerPlugin.dylib
+    expire_in: 30 days
+
+  rules:
+    - !reference [.upstream_rules, rules]
+
+"MacOS Intel":
+  tags:
+  - macos
+  stage: build
+  script:
+  - ./scripts/build-macos.sh qt6 intel
+
+  artifacts:
+    name: "${CI_PROJECT_NAME}_MacOS_Intel_${CI_COMMIT_SHORT_SHA}"
+    paths:
+    - libOpenRGBSchedulerPlugin.dylib
+    expire_in: 30 days
+
+  rules:
+    - !reference [.upstream_rules, rules]
+
+#-----------------------------------------------------------#
+# Windows (64-bit) MSI Target                               #
+#-----------------------------------------------------------#
+"Windows 64 MSI":
+  image: registry.gitlab.com/openrgbdevelopers/openrgb-linux-ci-deb-builder:bookworm-i386
+  stage: deploy
+  tags:
+  - linux
+  - i386
+  script:
+  -  ls -la
+  -  ./scripts/build-msi.sh
+  dependencies:
+  - "Windows 64"
+  needs:
+  - "Windows 64"
+
+  artifacts:
+    name: "${CI_PROJECT_NAME}_Windows_64_msi_${CI_COMMIT_SHORT_SHA}"
+    paths:
+    - OpenRGB_Scheduler_Plugin_Windows_64.msi
+    expire_in: 30 days
+
+  rules:
+    - !reference [.upstream_rules, rules]

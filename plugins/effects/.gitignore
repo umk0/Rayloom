@@ -1,0 +1,17 @@
+*.pro.user*
+*.o
+ui_*
+moc_*
+qrc_*
+Makefile
+OpenRGB-x86_64.AppImage
+.qmake.stash
+.vscode
+build
+Ship
+libORGBEffectPlugin.so*
+*.qm
+_intermediate_release/
+release/
+OpenRGBEffectsPlugin Windows 32-bit/
+OpenRGBEffectsPlugin Windows 64-bit/

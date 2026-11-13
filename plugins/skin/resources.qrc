@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/">
+        <file>OpenRGBSkinPlugin.png</file>
+    </qresource>
+</RCC>

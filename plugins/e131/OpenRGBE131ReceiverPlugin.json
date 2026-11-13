@@ -1,0 +1,11 @@
+{
+    "Id" : "org.openrgb.openrgbe131receiverplugin",
+    "Name" : "OpenRGB E1.31 Receiver Plugin",
+    "VendorId" : "openrgb",
+    "Version" : "1.0.0",
+    "VersionStr" : "1.0",
+    "Url" : "https://gitlab.com/OpenRGBDevelopers/OpenRGBE131ReceiverPlugin",
+    "Commit" : "4900d20baba8d422a38df357c3637e77a864ec89",
+    "Description" : "Receive E1.31 lighting control data from external applications to control OpenRGB devices",
+    "OpenRGBPluginAPIVersion" : 5
+}

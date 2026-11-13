@@ -1,0 +1,278 @@
+/* Quiet Workspace spatial tools. All selectors stay within the Mantine shell. */
+.rayloom .spatial-editor {
+  --space-bg: #111619;
+  --space-panel: #181e22;
+  --space-text: #eeefed;
+  --space-muted: #a7b5bd;
+  --space-line: #303a41;
+  --space-accent: #c9ec89;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  height: clamp(390px, 49vh, 680px);
+  color: var(--space-text);
+  background: var(--space-bg);
+  border: 1px solid #29343a;
+  border-radius: 16px;
+  overflow: hidden;
+}
+.rayloom .spatial-topbar {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 16px 20px;
+  background: #161b1f;
+}
+.rayloom .spatial-title { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
+.rayloom .spatial-title > svg { color: #adbdc6; flex: none; }
+.rayloom .spatial-title strong { display: block; font-size: 15px; font-weight: 600; }
+.rayloom .spatial-title small { display: block; color: var(--space-muted); font-size: 13px; margin-top: 4px; }
+.rayloom .spatial-mode-tabs { flex: none; }
+.rayloom .spatial-mode-tabs .mantine-Tabs-list { gap: 3px; border-radius: 9px; background: #22282d; padding: 3px; }
+.rayloom .spatial-mode-tabs .mantine-Tabs-tab { min-height: 34px; padding: 6px 12px; color: #b5c1c7; border-radius: 6px; }
+.rayloom .spatial-mode-tabs .mantine-Tabs-tab[data-active] { color: #202716; background: #c5e879; }
+.rayloom .spatial-expand { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 38px; padding: 8px 12px; border-radius: 8px; color: #d9e0e3; white-space: nowrap; font-size: 14px; }
+.rayloom .spatial-expand:hover { background: #29343b; }
+.rayloom .spatial-editor-body { display: flex; flex: 1; min-height: 0; min-width: 0; }
+.rayloom .spatial-stage-column { display: flex; flex-direction: column; flex: 1; min-height: 0; min-width: 0; }
+.rayloom .spatial-tools { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 16px; background: #111619; }
+.rayloom .spatial-tools > div { display: flex; align-items: center; gap: 4px; min-width: 0; }
+.rayloom .spatial-tools button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; height: 34px; min-width: 34px; padding: 6px 9px; border-radius: 7px; color: #b3c1c8; white-space: nowrap; font-size: 14px; }
+.rayloom .spatial-tools button:hover:not(:disabled) { background: #26343b; color: #e9eedf; }
+.rayloom .spatial-tools button:disabled { opacity: .35; }
+.rayloom .spatial-tools .spatial-zoom { min-width: 53px; font-variant-numeric: tabular-nums; }
+.rayloom .spatial-tools .mantine-Select-root { width: 150px; margin-right: 6px; }
+.rayloom .spatial-surface { position: relative; flex: 1; min-height: 260px; min-width: 0; overflow: hidden; background: #111619; }
+.rayloom .spatial-canvas { display: block; width: 100%; height: 100%; touch-action: none; cursor: grab; user-select: none; }
+.rayloom .spatial-canvas:focus-visible { outline: 2px solid #b9d889; outline-offset: -3px; border-radius: 4px; }
+.rayloom .spatial-component { cursor: move; }
+.rayloom .spatial-component text { pointer-events: none; }
+.rayloom .spatial-axis-handle { cursor: crosshair; }
+.rayloom .is-panning .spatial-canvas,
+.rayloom .is-dragging .spatial-component { cursor: grabbing; }
+.rayloom .spatial-status { display: flex; justify-content: space-between; align-items: center; gap: 14px; padding: 10px 18px; min-height: 38px; color: #9baeb8; font-size: 12px; }
+.rayloom .spatial-status span { display: inline-flex; align-items: center; gap: 7px; }
+.rayloom .spatial-status span + span { color: #8c9ca5; text-align: right; }
+.rayloom .spatial-world-size { display: flex; justify-content: space-between; gap: 12px; padding: 0 18px 10px; color: #9fadb5; font-size: 12px; }
+.rayloom .spatial-offscreen-banner { position: absolute; top: 16px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 15px; background: #252c1ee8; color: #e3ebd5; border-radius: 10px; padding: 10px 16px; font-size: 14px; box-shadow: 0 6px 28px #0004; }
+.rayloom .spatial-offscreen-banner button { color: #c9ec89; font-size: 14px; white-space: nowrap; }
+.rayloom .spatial-edge-indicator { position: absolute; display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; transform: translate(-50%, -50%); background: #35422b; color: #d9f3ae; box-shadow: 0 3px 12px #0005; }
+.rayloom .spatial-help { position: absolute; top: 12px; right: 12px; width: min(380px, calc(100% - 24px)); max-height: calc(100% - 24px); background: #23281fec; border: 1px solid #454d39; border-radius: 12px; backdrop-filter: blur(18px); box-shadow: 0 10px 40px #0005; }
+.rayloom .spatial-help .mantine-ScrollArea-viewport { max-height: 420px; }
+.rayloom .spatial-help .mantine-ScrollArea-viewport > div { padding: 20px; }
+.rayloom .spatial-help strong { display: block; font-size: 15px; padding-right: 20px; }
+.rayloom .spatial-help-close { position: absolute; top: 12px; right: 12px; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 6px; color: #cdd6c0; z-index: 1; }
+.rayloom .spatial-help-close:hover { background: #3c4533; }
+.rayloom .spatial-help dl { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 16px; margin: 20px 0 0; font-size: 13px; line-height: 1.45; }
+.rayloom .spatial-help dt { color: #e4ebd9; }
+.rayloom .spatial-help dd { margin: 0; color: #a7b098; }
+.rayloom .spatial-announcement { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.rayloom.rayloom-spatial-portal { position: fixed; inset: 0; z-index: 150; background: #111619; color: #eeefed; font-family: var(--mantine-font-family, sans-serif); }
+.rayloom .spatial-editor.is-expanded { width: 100%; height: 100dvh; border: 0; border-radius: 0; }
+.rayloom .is-expanded .spatial-topbar { padding: 16px 24px; border-bottom: 1px solid #29343a; }
+.rayloom .is-expanded .spatial-surface { min-height: 0; }
+.rayloom .spatial-component-browser { display: flex; flex-direction: column; width: 220px; flex: none; min-height: 0; background: #161b1f; border-right: 1px solid #29343a; }
+.rayloom .spatial-inspector-heading { display: flex; align-items: center; gap: 10px; padding: 20px; font-size: 14px; }
+.rayloom .spatial-inspector-heading strong { flex: 1; font-weight: 600; }
+.rayloom .spatial-inspector-heading > span { font-size: 12px; color: #919b82; }
+.rayloom .spatial-component-search { padding: 0 12px 14px; }
+.rayloom .spatial-component-list { flex: 1; min-height: 0; }
+.rayloom .spatial-component-list .mantine-ScrollArea-viewport > div { padding: 0 8px; }
+.rayloom .spatial-component-list button { position: relative; display: block; width: 100%; padding: 12px 30px 12px 12px; border-radius: 8px; margin-bottom: 4px; color: #d4d9cb; }
+.rayloom .spatial-component-list button:hover { background: #272d21; }
+.rayloom .spatial-component-list button.selected { background: #343e28; color: #eaf4d5; }
+.rayloom .spatial-component-list button > span { display: block; font-size: 14px; overflow-wrap: anywhere; }
+.rayloom .spatial-component-list button small { display: block; margin-top: 5px; color: #a2ac94; font-size: 12px; line-height: 1.45; }
+.rayloom .spatial-component-list button > svg { position: absolute; top: 14px; right: 10px; color: #9aa78a; }
+.rayloom .spatial-list-hint { padding: 10px 18px 16px; margin: 0; color: #919b82; line-height: 1.6; font-size: 12px; }
+.rayloom .spatial-list-empty { margin: 0; padding: 18px; color: #a6af99; font-size: 14px; line-height: 1.6; }
+.rayloom .spatial-expanded-inspector { display: flex; flex-direction: column; width: 330px; flex: none; min-height: 0; background: #181e22; border-left: 1px solid #30352a; }
+.rayloom .spatial-expanded-inspector > .spatial-inspector-heading { padding-bottom: 14px; }
+.rayloom .spatial-inspector-scroll { flex: 1; min-height: 0; }
+.rayloom .spatial-inspector-scroll .mantine-ScrollArea-viewport > div { padding: 8px 22px 24px; }
+.rayloom .spatial-compact-selector { display: none; padding: 0 20px 14px; }
+.rayloom .spatial-select-hint { display: flex; align-items: flex-start; flex-direction: column; gap: 14px; padding-top: 24px; line-height: 1.6; }
+.rayloom .spatial-select-hint > svg { color: #b8ce94; }
+.rayloom .spatial-select-hint p { margin: 0; font-size: 14px; color: #a6af99; }
+.rayloom .spatial-expanded-footer { display: flex; flex-direction: column; gap: 12px; padding: 18px 20px; border-top: 1px solid #30352a; }
+.rayloom .spatial-expanded-footer > small { color: #939e84; font-size: 12px; line-height: 1.5; }
+.rayloom .spatial-save-state { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 12px; color: #a4b68b; }
+.rayloom .spatial-save-state .is-dirty { color: #e0ca8e; }
+.rayloom .spatial-save-state kbd { color: #87947a; font-family: inherit; }
+.rayloom .spatial-feedback { margin: 0; color: #c9ec89; font-size: 13px; line-height: 1.5; }
+.rayloom .spatial-feedback.is-error { color: #f0a9a3; }
+.rayloom .spatial-placeholder { display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 16px; min-height: 300px; border-radius: 16px; background: #191d15; color: #c4d5aa; }
+.rayloom .spatial-placeholder button { padding: 9px 14px; color: #c9ec89; border-radius: 8px; background: #2d3822; }
+
+/* Shared inspector in the workspace, devices page and fullscreen portal. */
+.rayloom .port-inspector { display: flex; flex-direction: column; gap: 26px; min-width: 0; font-size: 14px; }
+.rayloom .port-inspector section { display: flex; flex-direction: column; gap: 14px; }
+.rayloom .port-inspector p { margin: 0; color: #a4ad97; font-size: 13px; line-height: 1.6; }
+.rayloom .port-inspector h3,
+.rayloom .matrix-editor h3 { margin: 0; font-size: 15px; font-weight: 600; color: #e3e9d9; }
+.rayloom .port-inspector .port-back { align-self: flex-start; margin-left: -8px; }
+.rayloom .port-source { overflow-wrap: anywhere; }
+.rayloom .port-source span { display: block; margin-top: 3px; font-size: 12px; color: #828d76; }
+.rayloom .port-connection { display: flex; align-items: center; gap: 7px; font-size: 12px; color: #a6ac9c; }
+.rayloom .port-connection i { width: 6px; height: 6px; border-radius: 50%; background: #777f6c; }
+.rayloom .port-connection.is-connected { color: #bdd296; }
+.rayloom .port-connection.is-connected i { background: #c9ec89; }
+.rayloom .port-identify-section .mantine-Button-root { width: 100%; }
+.rayloom .port-inspector .mantine-Button-label,
+.rayloom .matrix-editor .mantine-Button-label,
+.rayloom .spatial-expanded-footer .mantine-Button-label,
+.rayloom .groups-workspace .mantine-Button-label,
+.rayloom .calibration-wizard .mantine-Button-label,
+.rayloom .visual-map-panel .mantine-Button-label { gap: 8px; }
+.rayloom .port-inspector .section-heading-plain,
+.rayloom .groups-workspace .section-heading-plain { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.rayloom .port-inspector .studio-fields,
+.rayloom .matrix-editor .studio-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 12px; }
+.rayloom .port-position .spatial-reset-pose { align-self: flex-start; margin-left: -8px; height: auto; min-height: 34px; }
+.rayloom .port-position .spatial-reset-pose .mantine-Button-label { white-space: normal; line-height: 1.5; text-align: left; }
+.rayloom .port-accordion .mantine-Accordion-item { background: transparent; border-color: #333b2a; }
+.rayloom .port-accordion .mantine-Accordion-control { padding: 16px 0; border-radius: 0; color: #dfe8d2; }
+.rayloom .port-accordion .mantine-Accordion-control:hover { background: transparent; color: #c9ec89; }
+.rayloom .port-accordion .mantine-Accordion-label { padding: 0; font-size: 14px; line-height: 1.5; font-weight: 500; }
+.rayloom .port-accordion .mantine-Accordion-label > span { display: flex; align-items: center; gap: 9px; }
+.rayloom .port-accordion .mantine-Accordion-content { display: flex; flex-direction: column; gap: 18px; padding: 0 0 24px; }
+.rayloom .port-accordion .mantine-Switch-root { margin: 2px 0; }
+.rayloom .port-calibration .calibration-colors { display: flex; flex-wrap: wrap; gap: 8px; }
+.rayloom .calibration-colors .mantine-Button-root { padding-inline: 9px; flex: 1; font-size: 12px; }
+.rayloom .calibration-colors i { width: 7px; height: 7px; border-radius: 50%; background: var(--test-color); }
+.rayloom .port-inspector .port-empty-hint { color: #9aa78b; }
+.rayloom .port-template-save { width: 100%; }
+.rayloom .matrix-editor { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+.rayloom .matrix-editor > p { margin: 0; color: #a4ad97; font-size: 13px; line-height: 1.6; }
+.rayloom .matrix-editor .port-range { color: #b2bf9f; font-size: 12px; line-height: 1.5; }
+.rayloom .matrix-preview { display: block; width: 100%; height: 180px; border-radius: 10px; background: #13170f; }
+.rayloom .matrix-preview circle { cursor: pointer; }
+.rayloom .matrix-preview circle:focus-visible { stroke: #f6f9ef; stroke-width: 2px; outline: none; }
+.rayloom .matrix-editor .studio-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.rayloom .matrix-actions .mantine-Button-root { flex: 1 1 100%; height: auto; min-height: 36px; }
+.rayloom .matrix-actions .mantine-Button-label { white-space: normal; line-height: 1.5; padding-block: 6px; }
+.rayloom .matrix-editor .studio-link { align-self: flex-start; padding: 0; color: #bfda97; font-size: 13px; background: transparent; border: 0; cursor: pointer; text-align: left; }
+.rayloom .matrix-calibration { display: flex; flex-direction: column; gap: 16px; padding-top: 18px; border-top: 1px solid #333b2a; }
+.rayloom .matrix-calibration p { margin: 0; color: #a4ad97; font-size: 13px; line-height: 1.6; }
+
+/* The wizard owns focus above the native fullscreen editor. */
+.rayloom.calibration-modal .mantine-Modal-content { background: #1e211b; color: #eef1e7; border-radius: 18px; }
+.rayloom.calibration-modal .mantine-Modal-header { background: #1e211b; padding: 24px 28px 12px; }
+.rayloom.calibration-modal .calibration-modal-body { padding: 0 28px 28px; }
+.rayloom .calibration-modal-title { display: flex; align-items: center; gap: 12px; font-size: 21px; font-weight: 600; }
+.rayloom .calibration-modal-title > svg { color: #c9ec89; }
+.rayloom .calibration-device-name { margin: 0 0 24px; color: #acb89c; font-size: 14px; }
+.rayloom .calibration-body { display: flex; flex-direction: column; gap: 18px; }
+.rayloom .calibration-body p { margin: 0; line-height: 1.65; font-size: 14px; color: #bcc6af; }
+.rayloom .calibration-body h3 { margin: 4px 0 0; font-weight: 600; font-size: 21px; }
+.rayloom .calibration-body .calibration-error { color: #f1aaa5; padding: 12px 15px; border-radius: 10px; background: #492a2633; }
+.rayloom .calibration-body .calibration-notice { color: #e3ca92; padding: 12px 15px; border-radius: 10px; background: #56451e33; }
+.rayloom .calibration-isolation { display: flex; align-items: flex-start; gap: 16px; padding: 20px; background: #2b3024; border-radius: 12px; }
+.rayloom .calibration-isolation > svg { flex: none; color: #c9ec89; margin-top: 2px; }
+.rayloom .calibration-isolation strong { display: block; margin-bottom: 8px; font-size: 14px; }
+.rayloom .calibration-body .calibration-hint { color: #9caa8d; font-size: 13px; }
+.rayloom .calibration-progress { display: flex; align-items: center; gap: 8px; }
+.rayloom .calibration-progress > span { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: #353d2c; color: #a9b799; font-size: 13px; }
+.rayloom .calibration-progress > span[data-current="true"],
+.rayloom .calibration-progress > span[data-complete="true"] { background: #c9ec89; color: #253114; }
+.rayloom .calibration-progress small { margin-left: 8px; font-size: 13px; color: #b7c2a9; }
+.rayloom .calibration-choice-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.rayloom .calibration-choice-grid .calibration-choice { height: auto; min-height: 96px; padding: 18px 8px; }
+.rayloom .calibration-choice-grid .mantine-Button-label { display: flex; flex-direction: column; gap: 12px; }
+.rayloom .calibration-choice i { width: 26px; height: 26px; border-radius: 50%; box-shadow: 0 2px 14px #0002; }
+.rayloom .calibration-other-choices { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 8px; }
+.rayloom .calibration-review-swatch { width: 58px; height: 58px; border-radius: 18px; background: #ef5364; box-shadow: 0 0 35px #ed4a5c22; }
+.rayloom .calibration-result { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; background: #2b3024; border-radius: 10px; font-size: 14px; color: #bac8a9; }
+.rayloom .calibration-result strong { color: #e6f0d6; font-family: monospace; letter-spacing: .15em; }
+.rayloom .calibration-footer { display: flex; justify-content: flex-end; align-items: center; flex-wrap: wrap; gap: 10px; padding-top: 26px; }
+.rayloom .calibration-footer > .mantine-Button-root:first-child { margin-right: auto; }
+.rayloom .calibration-footer > .calibration-hint { color: #9caa8d; font-size: 13px; }
+
+/* Groups: choose members first, then use the resulting target for an effect. */
+.rayloom .groups-workspace { display: grid; grid-template-columns: 270px minmax(0, 1fr); gap: 40px; max-width: 1120px; min-width: 0; }
+.rayloom .group-library { display: flex; flex-direction: column; gap: 8px; }
+.rayloom .groups-workspace h2 { margin: 0; font-size: 22px; font-weight: 500; }
+.rayloom .groups-workspace h3 { margin: 0; font-size: 15px; font-weight: 500; }
+.rayloom .group-library .section-heading-plain { padding-bottom: 15px; }
+.rayloom .group-library h2 { font-size: 16px; }
+.rayloom .group-library > p { color: #a4ad97; font-size: 14px; line-height: 1.65; padding: 8px; }
+.rayloom .group-tile { display: flex; align-items: center; gap: 12px; min-height: 72px; padding: 14px; color: #d8e2c9; border-radius: 11px; }
+.rayloom .group-tile:hover { background: #242c1c; }
+.rayloom .group-tile.selected { background: #2e3a22; }
+.rayloom .group-tile > svg { flex: none; color: #afc390; }
+.rayloom .group-tile > span { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 0; }
+.rayloom .group-tile strong { font-size: 14px; font-weight: 500; overflow-wrap: anywhere; }
+.rayloom .group-tile small { font-size: 12px; color: #9da98d; }
+.rayloom .group-editor { display: flex; flex-direction: column; gap: 22px; min-width: 0; padding: 28px; background: #1c1e19; border-radius: 16px; }
+.rayloom .group-editor .studio-kicker { margin: 0 0 -10px; font-size: 11px; letter-spacing: .14em; color: #a3b58d; }
+.rayloom .group-editor .section-heading-plain > span { color: #a5b393; font-size: 13px; white-space: nowrap; }
+.rayloom .group-editor .studio-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.rayloom .group-editor .studio-actions.compact { margin-top: -10px; }
+.rayloom .group-member-scroll { height: min(390px, 45vh); min-height: 160px; margin: -6px 0; }
+.rayloom .group-member-choice { padding: 14px 16px; margin-bottom: 6px; border-radius: 10px; background: #24271f; transition: background .15s ease; }
+.rayloom .group-member-choice.selected { background: #343d29; }
+.rayloom .group-member-choice .mantine-Checkbox-label { display: block; width: 100%; padding-left: 13px; cursor: pointer; }
+.rayloom .group-member-choice .mantine-Checkbox-body { align-items: center; }
+.rayloom .group-member-choice .mantine-Checkbox-label strong { display: block; font-size: 14px; font-weight: 500; color: #e1e9d7; }
+.rayloom .group-member-choice .mantine-Checkbox-label small { display: block; margin-top: 5px; color: #a2af90; font-size: 12px; line-height: 1.5; }
+.rayloom .group-message { margin: 0; padding: 12px 15px; border-radius: 8px; background: #343c2a; color: #c9dfab; font-size: 14px; line-height: 1.5; }
+.rayloom .group-editor .studio-source { margin: 0; font-size: 13px; line-height: 1.6; color: #9aa98a; }
+
+/* Visual Map keeps all plugin controls while using the same compact form grammar. */
+.rayloom .visual-map-panel { display: flex; flex-direction: column; gap: 24px; min-width: 0; }
+.rayloom .visual-map-panel .scene-tabs,
+.rayloom .visual-map-panel .plugin-toolbar,
+.rayloom .visual-map-panel .inline { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.rayloom .visual-map-panel .scene-tabs .map-tabs { flex: 1; min-width: 180px; }
+.rayloom .visual-map-panel .scene-tabs .map-load { min-width: 210px; }
+.rayloom .visual-map-panel .plugin-toolbar > .mantine-TextInput-root { min-width: 200px; flex: 1; }
+.rayloom .visual-map-panel .muted { color: #9eac8f; font-size: 13px; line-height: 1.5; }
+.rayloom .visual-map-panel .map-layout { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 24px; }
+.rayloom .visual-map-panel .settings-panel { display: flex; flex-direction: column; gap: 20px; min-width: 0; padding: 24px; border-radius: 14px; background: #1c1e19; }
+.rayloom .visual-map-panel .settings-panel h2 { font-size: 17px; font-weight: 500; margin: 0; }
+.rayloom .visual-map-panel .subheading { display: flex; align-items: center; justify-content: space-between; gap: 15px; }
+.rayloom .visual-map-panel .map-canvas { display: block; width: 100%; height: 380px; touch-action: none; border-radius: 10px; overflow: hidden; background: #111619; }
+.rayloom .visual-map-panel .map-canvas g { cursor: move; }
+.rayloom .visual-map-panel .two-columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+.rayloom .visual-map-panel .wrap { gap: 18px 24px; }
+.rayloom .visual-map-panel .nav-item { padding: 12px 14px; width: 100%; border-radius: 8px; color: #b4c5a0; font-size: 14px; line-height: 1.5; text-align: left; }
+.rayloom .visual-map-panel .nav-item.active { color: #e3f0d2; background: #343d29; }
+.rayloom .visual-map-panel .nav-item:hover { background: #29351e; }
+.rayloom .visual-map-panel .led-position-list .mantine-ScrollArea-viewport > div { display: flex; flex-direction: column; gap: 16px; }
+.rayloom .visual-map-panel .led-position-list .inline { flex-wrap: nowrap; gap: 8px; }
+.rayloom .visual-map-panel .led-position-list .inline > span { min-width: 24px; font-size: 13px; color: #a7b495; }
+.rayloom .visual-map-panel .gradient-preview { height: 64px; border-radius: 10px; }
+.rayloom .visual-map-panel .settings-panel > .inline > .mantine-InputWrapper-root { flex: 1 1 180px; }
+.rayloom .visual-map-panel .error-banner { padding: 14px 18px; border-radius: 10px; background: #442923; color: #f0b7af; font-size: 14px; line-height: 1.6; }
+
+@media (max-width: 1250px) {
+  .rayloom .spatial-tools button > span { display: none; }
+  .rayloom .spatial-status span + span { display: none; }
+  .rayloom .groups-workspace { gap: 24px; grid-template-columns: 230px minmax(0, 1fr); }
+  .rayloom .visual-map-panel .map-layout { grid-template-columns: minmax(0, 1fr) 290px; }
+}
+@media (max-width: 1100px) {
+  .rayloom .spatial-component-browser { display: none; }
+  .rayloom .spatial-compact-selector { display: block; }
+  .rayloom .is-expanded .spatial-expanded-inspector { width: 320px; }
+  .rayloom .spatial-title small { display: none; }
+  .rayloom .visual-map-panel .map-layout { grid-template-columns: 1fr; }
+}
+@media (max-width: 760px) {
+  .rayloom .spatial-topbar { padding: 12px; gap: 10px; }
+  .rayloom .spatial-title > svg { display: none; }
+  .rayloom .spatial-title strong { font-size: 14px; }
+  .rayloom .spatial-expand > span { display: none; }
+  .rayloom .spatial-tools { padding: 8px; }
+  .rayloom .spatial-tools .mantine-Select-root { width: 112px; }
+  .rayloom .is-expanded .spatial-expanded-inspector { width: 280px; }
+  .rayloom .spatial-inspector-scroll .mantine-ScrollArea-viewport > div { padding-inline: 16px; }
+  .rayloom .groups-workspace { grid-template-columns: 1fr; }
+  .rayloom .group-library { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .rayloom .group-library .section-heading-plain { grid-column: 1 / -1; }
+  .rayloom .group-editor { padding: 22px; }
+  .rayloom .visual-map-panel .settings-panel { padding: 18px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rayloom .group-member-choice { transition: none; }
+}

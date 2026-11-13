@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2026 Adam Honse, OpenRGB Team -->
+<component type="addon">
+  <id>org.openrgb.OpenRGB.Plugin.Scheduler</id>
+  <extends>org.openrgb.OpenRGB</extends>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-2.0-or-later</project_license>
+  <developer id="org.openrgb">
+    <name>Adam Honse, OpenRGB Team</name>
+  </developer>
+
+  <name>OpenRGB Scheduler Plugin</name>
+  <icon type="stock">openrgb-scheduler-plugin</icon>
+
+  <content_rating type="oars-1.0" />
+
+  <summary>Scheduler plugin for OpenRGB that schedules OpenRGB profile changes</summary>
+
+  <description>
+    <p>
+      The OpenRGB Scheduler Plugin is a plugin for OpenRGB that can schedule
+      actions including profile changes and turning off the lights.
+    </p><p>
+      Features
+    </p>
+    <ul>
+      <li>Schedule profile changes</li>
+      <li>Schedule turning off all lights</li>
+    </ul>
+  </description>
+
+  <releases>
+    <release version="1.0" date="2026-09-11"></release>
+    <release version="1.0~rc2" date="2025-09-14" type="development"></release>
+    <release version="0.9" date="2023-07-11"></release>
+    <release version="0.8" date="2022-12-03"></release>
+  </releases>
+
+  <screenshots>
+    <screenshot type="default">
+      <image>https://gitlab.com/OpenRGBDevelopers/OpenRGBSchedulerPlugin/-/raw/master/Documentation/Images/Screenshot.png</image>
+      <caption>OpenRGB Scheduler Plugin</caption>
+    </screenshot>
+  </screenshots>
+
+  <keywords>
+    <keyword>rgb</keyword>
+    <keyword>schedule</keyword>
+    <keyword>lighting</keyword>
+    <keyword>plugin</keyword>
+  </keywords>
+
+  <url type="bugtracker">https://gitlab.com/OpenRGBDevelopers/OpenRGBSchedulerPlugin/-/issues</url>
+  <url type="donation">https://gitlab.com/CalcProgrammer1/OpenRGB/-/blob/master/README.md#support-openrgb</url>
+  <url type="help">https://gitlab.com/OpenRGBDevelopers/OpenRGBSchedulerPlugin/-/blob/master/README.md</url>
+  <url type="homepage">https://openrgb.org/plugin_scheduler.html</url>
+</component>

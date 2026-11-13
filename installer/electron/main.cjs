@@ -68,7 +68,7 @@ ipcMain.handle('setup:install',async(event,options)=>{
    catch(error){warning='Приложение установлено, но автозапуск прежнего профиля не перенесён. '+(error.message||String(error));}
   }else if(options.sourceProfile&&migration?.autoStart){warning='Приложение установлено. Отключите прежний автозапуск и включите его для нового профиля в настройках Rayloom.';}
   // NSIS is only the silent container. It reads these paths to register shortcuts/uninstall.
-  fs.writeFileSync(resultFile,`[Rayloom]\r\nInstallDir=${options.installDir}\r\nDataDir=${options.dataDir}\r\n`,{flag:'w'});
+  fs.writeFileSync(resultFile,`\uFEFF[Rayloom]\r\nInstallDir=${options.installDir}\r\nDataDir=${options.dataDir}\r\n`,{flag:'w',encoding:'utf16le'});
   return {version:result.version,operation:result.operation,migrated:result.migrated,warning};
  }finally{installing=false;}
 });

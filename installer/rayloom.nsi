@@ -10,8 +10,10 @@ SetCompressor /SOLID lzma
 SilentInstall silent
 AutoCloseWindow true
 ShowUninstDetails show
+!include "LogicLib.nsh"
 
 Var DataDir
+Var RemoveProfile
 
 Section "Rayloom"
  InitPluginsDir
@@ -49,6 +51,13 @@ Function un.onInit
 FunctionEnd
 
 Section "Uninstall"
+ StrCpy $RemoveProfile "0"
+ IfSilent ProfileChoiceDone
+ MessageBox MB_YESNO|MB_DEFBUTTON2 "Удалить также ваши сцены, макеты и настройки? По умолчанию профиль сохраняется." IDYES DeleteProfileChoice
+ Goto ProfileChoiceDone
+ DeleteProfileChoice:
+ StrCpy $RemoveProfile "1"
+ ProfileChoiceDone:
  ExecWait '"$INSTDIR\current\app\runtime\node\node.exe" "$INSTDIR\current\app\shared\install-release.mjs" --operation check-uninstall --install "$INSTDIR" --data "$DataDir"' $0
  StrCmp $0 "0" +3
   MessageBox MB_ICONSTOP "Сначала закройте Rayloom и фоновый движок. Профиль сохранён."
@@ -57,7 +66,11 @@ Section "Uninstall"
  StrCmp $0 "0" +3
   MessageBox MB_ICONSTOP "Не удалось убрать автозапуск. Приложение оставлено без изменений."
   Abort
- ExecWait '"$INSTDIR\current\app\runtime\node\node.exe" "$INSTDIR\current\app\shared\install-release.mjs" --operation uninstall --install "$INSTDIR" --data "$DataDir"' $0
+ ${If} $RemoveProfile == "1"
+  ExecWait '"$INSTDIR\current\app\runtime\node\node.exe" "$INSTDIR\current\app\shared\install-release.mjs" --operation uninstall --install "$INSTDIR" --data "$DataDir" --delete-data' $0
+ ${Else}
+  ExecWait '"$INSTDIR\current\app\runtime\node\node.exe" "$INSTDIR\current\app\shared\install-release.mjs" --operation uninstall --install "$INSTDIR" --data "$DataDir"' $0
+ ${EndIf}
  StrCmp $0 "0" +3
   MessageBox MB_ICONSTOP "Сначала закройте Rayloom и фоновый движок. Профиль сохранён."
   Abort

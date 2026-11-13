@@ -33,12 +33,14 @@ class ScreenBoundary extends ReactComponent<{children:ReactNode;onBack:()=>void}
 
 export function RayloomApp(){
  const s=useStudio();const [tab,setTab]=useState<Tab>('light'),[plugin,setPlugin]=useState(''),[nativeTab,setNativeTab]=useState('effects'),[expanded,setExpanded]=useState(false),[inspectorMode,setInspectorMode]=useState('effect'),[devicesOpen,setDevicesOpen]=useState(false);
+ const [availableUpdate,setAvailableUpdate]=useState('');
  const [layoutTarget,setLayoutTarget]=useState('');
  const mode=s.state?.mode??s.snapshot.mode??'hardware';
  useEffect(()=>{setLayoutTarget('');},[mode]);
  const viewport=useRef<HTMLDivElement>(null);
  useEffect(()=>{if(!s.ready)return;let active=true;void window.rayloom.plugin('skin','config.get').then(config=>{if(active&&config?.load_at_startup)applyTheme(config);}).catch(()=>{});return()=>{active=false;};},[s.ready,s.state?.mode]);
  useEffect(()=>{if(!s.notice)return;const timeout=setTimeout(()=>s.setNotice(''),7000);return()=>clearTimeout(timeout);},[s.notice]);
+ useEffect(()=>window.rayloom.onUpdateAvailable(result=>{if(result?.latest)setAvailableUpdate(String(result.latest));}),[]);
  const choose=(next:Tab)=>{setTab(next);s.setNotice('');viewport.current?.scrollTo({top:0});};
  const chooseComponent=(id:string)=>{s.setSelected(id);setInspectorMode(id?'device':'effect');};
  const openNative=(section='effects')=>{setNativeTab(section);choose('native');};
@@ -58,6 +60,7 @@ export function RayloomApp(){
   <ScrollArea className="ray-content" viewportRef={viewport} type="auto" scrollbarSize={5} offsetScrollbars={false}>
    <main className={'ray-main'+(tab==='light'?' is-workspace':'')}>
     <Group justify="space-between" gap="md" className="ray-page-heading"><Group gap="xl"><Title order={1}>{title}</Title>{tab==='light'&&<Text className="ray-live-status" size="sm"><span className={s.running?'live-dot active':'live-dot'}/>{status}</Text>}</Group>{tab==='light'&&<Button variant="subtle" color="gray" leftSection={<Monitor size={17}/>} onClick={()=>setDevicesOpen(true)}>{s.devices.length} устройств</Button>}{['native','plugin','map'].includes(tab)&&<Button variant="subtle" leftSection={<ArrowLeft size={16}/>} onClick={()=>choose('extensions')}>К расширениям</Button>}</Group>
+    {availableUpdate&&tab!=='settings'&&<Alert color="ray" mb="md" title={`Доступна Rayloom ${availableUpdate}`}><Group justify="space-between" align="center"><Text size="sm">Обновление готово к загрузке.</Text><Button size="xs" variant="light" onClick={()=>choose('settings')}>Открыть обновления</Button></Group></Alert>}
     {(s.snapshot.error||s.state?.error)&&<Alert color="red" mb="md" role="alert">{s.snapshot.error||s.state.error}</Alert>}
     {s.state?.mode==='virtual'&&<Text className="ray-virtual-note" size="xs" mb="md">Виртуальная студия · тестовое оборудование <Button variant="transparent" size="compact-xs" onClick={()=>choose('settings')}>Изменить</Button></Text>}
     {!!s.state?.warnings?.length&&<Alert color="yellow" mb="md" title="Некоторые порты недоступны"><Text size="sm">{s.state.warnings[0]}</Text><Button variant="subtle" size="compact-sm" onClick={()=>choose('devices')}>Проверить устройства</Button></Alert>}

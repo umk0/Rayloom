@@ -3,8 +3,9 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {createHash} from 'node:crypto';
 
-const repo='Umk0/Rayloom';
+const repo='umk0/Rayloom';
 const latestUrl=`https://api.github.com/repos/${repo}/releases/latest`;
+const releasesUrl=`https://api.github.com/repos/${repo}/releases?per_page=20`;
 const versionPattern=/^\d+\.\d+\.\d+$/;
 export function compareVersions(left,right){
  if(!versionPattern.test(left)||!versionPattern.test(right))throw Error('Invalid release version');
@@ -22,8 +23,15 @@ export class UpdateService{
  constructor({version,dataDir,fetcher=fetch}={}){if(!versionPattern.test(version))throw Error('Invalid current version');this.version=version;this.dataDir=dataDir;this.fetcher=fetcher;this.available=null;this.downloaded=null;}
  async check(){
   const response=await checkedFetch(latestUrl,this.fetcher);
-  if(!response){this.available=null;return {status:'no-release',current:this.version};}
-  const release=await response.json();
+  let release;
+  if(response)release=await response.json();
+  else{
+   const listing=await checkedFetch(releasesUrl,this.fetcher);
+   const releases=listing?await listing.json():[];
+   if(!Array.isArray(releases))throw Error('Unexpected GitHub releases response');
+   release=releases.filter(item=>!item.draft&&versionPattern.test(String(item.tag_name||'').replace(/^v/,''))).sort((a,b)=>compareVersions(String(b.tag_name).replace(/^v/,''),String(a.tag_name).replace(/^v/,'')))[0];
+   if(!release){this.available=null;return {status:'no-release',current:this.version};}
+  }
   const version=String(release.tag_name||'').replace(/^v/,'');
   if(!versionPattern.test(version))throw Error('Unexpected release tag');
   if(compareVersions(version,this.version)<=0){this.available=null;return {status:'current',current:this.version,latest:version};}
